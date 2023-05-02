@@ -21,7 +21,6 @@ public:
 	void KeyUp( int key = 0 ) { /* implement if you want to handle keys */ }
 	void KeyDown( int key = 0 ) { /* implement if you want to handle keys */ }
 	void drawBlock(Sprite& color);
-	int FrameMin();
 	int FramePlus();
 private:
 	Surface* screen;
@@ -45,7 +44,7 @@ private:
 	int blockWidth = 100;
 	int blockHeight = 100;
 	int blockX{ ScreenWidth / 2 - (blockWidth / 2) };
-	int blockY{ ScreenHeight / 2 - (blockHeight / 2) };
+	int blockY{ 0 };
 
 	Graphics::Timer blockTimer;
 

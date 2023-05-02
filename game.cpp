@@ -16,12 +16,16 @@ namespace Tmpl8
 	{
         blockTimer.tick();
         elapsedSeconds = static_cast<int>(blockTimer.totalSeconds());
+
+        //Move blocks downwards
         if (elapsedSeconds > lastSecond)
         {
             blockY += static_cast<int>(blockHeight / 3);
             lastSecond = elapsedSeconds;
         }
 
+
+        //Rotating & moving blocks on keypress
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 /* Look for a keypress */
@@ -35,10 +39,10 @@ namespace Tmpl8
                     blockX += static_cast<int>(blockWidth / 3); 
                     break;
                 case SDLK_UP:
-                    blue.SetFrame(FrameMin()); 
+                    blue.SetFrame(FramePlus());
                     break;
                 case SDLK_DOWN:
-                    blue.SetFrame(FramePlus());
+                    blockY += static_cast<int>(blockHeight / 3);
                     break;
                 default:
                     break;
@@ -53,14 +57,6 @@ namespace Tmpl8
     void Game::drawBlock(Sprite& color)
     {
         color.DrawScaled(blockX, blockY, blockWidth, blockHeight, screen);
-    }
-
-    int Game::FrameMin()
-    {
-        if (blockFrame > 0) blockFrame--;
-        else blockFrame = 3;
-
-        return blockFrame;
     }
 
     int Game::FramePlus()
