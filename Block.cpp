@@ -1,21 +1,21 @@
 #include "Block.h"
+#include <iostream>
 
-Block::Block()
+Block::Block(Color color): 
+	color{color}
 {}
 
-
 Block::~Block()
-{
-}
+{}
 
 const vec Block::GetPosition() const
 {
-	return core.pos;
+	return position;
 }
 
 void Block::SetPosition(const vec pos)
 {
-	core.pos = pos;
+	position = pos;
 }
 
 const int Block::GetSize() const
@@ -23,15 +23,34 @@ const int Block::GetSize() const
 	return size;
 }
 
+const int Block::GetSizeOfRed() const
+{
+	return sizeOfRed; 
+}
+
+const int Block::GetSizeOfPurple() const
+{
+	return sizeOfPurple; 
+}
+
+const int Block::GetFrame() const
+{
+	return frame; 
+}
+
 int Block::FramePlus()
 {
-	if (frame < 3) frame++; 
-	else frame = 0; 
+	if (color == Red) frame = 0;
+	else
+	{
+		if (frame < 3) frame++; 
+		else frame = 0; 
+	}
 
 	return frame; 
 }
 
-inline void Block::Collider()
+void Block::Collider()
 {
 	//Relies on the fact that the frame will always increment by 1. (core.pos)
 	//core.pos and extra.pos are always the bottomleft corner of the colliders.
@@ -50,42 +69,42 @@ inline void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size * static_cast<int>(2 / 3);
-			core.height = static_cast<int>(size / 3);
+			core.width = size * (2 / 3);
+			core.height = size / 3;	
 			core.pos = origin;		
 									
-			extra.width = size * static_cast<int>(2 / 3);
-			extra.height = static_cast<int>(size / 3);
-			extra.pos.x = core.pos.x + static_cast<int>(size / 3);
-			extra.pos.y = core.pos.y - static_cast<int>(size / 3);
+			extra.width = size * (2 / 3);
+			extra.height = size / 3;	
+			extra.pos.x = core.pos.x + (size / 3);
+			extra.pos.y = core.pos.y - (size / 3);
 			break;
 		case 1:
-			core.width = static_cast<int>(size / 3);
-			core.height = size * static_cast<int>(2 / 3);
-			core.pos.y -= static_cast<int>(size / 3);
+			core.width = size / 3;
+			core.height = size * (2 / 3);
+			core.pos.y -= size / 3;
 
-			extra.width = static_cast<int>(size / 3);
-			extra.height = size * static_cast<int>(2 / 3);
-			extra.pos.x = core.pos.x + static_cast<int>(size / 3);
-			extra.pos.y = core.pos.y + static_cast<int>(size / 3);
+			extra.width = size / 3;
+			extra.height = size * (2 / 3);
+			extra.pos.x = core.pos.x + (size / 3);
+			extra.pos.y = core.pos.y + (size / 3);
 			break;
 		case 2:
-			core.width = size * static_cast<int>(2 / 3);
-			core.height = static_cast<int>(size / 3);
+			core.width = size * (2 / 3); 
+			core.height = size / 3; 
 
-			extra.width = size * static_cast<int>(2 / 3);
-			extra.height = static_cast<int>(size / 3);
-			extra.pos.y = core.pos.y - (size * static_cast<int>(2 / 3));
+			extra.width = size * (2 / 3); 
+			extra.height = size / 3;  
+			extra.pos.y = core.pos.y - (size * (2 / 3)); 
 			break;
 		case 3:
-			core.width = static_cast<int>(size / 3);
-			core.height = size * static_cast<int>(2 / 3);
-			core.pos.x += static_cast<int>(size / 3);
+			core.width = size / 3; 
+			core.height = size * (2 / 3); 
+			core.pos.x += size / 3; 
 
-			extra.width = static_cast<int>(size / 3);
-			extra.height = size * static_cast<int>(2 / 3);
-			extra.pos.x = core.pos.x + static_cast<int>(size / 3);
-			extra.pos.y = core.pos.y + (size * static_cast<int>(2 / 3));
+			extra.width = size / 3; 
+			extra.height = size * (2 / 3); 
+			extra.pos.x = core.pos.x + (size / 3); 
+			extra.pos.y = core.pos.y + (size * (2 / 3)); 
 			break;
 		}
 		break;
@@ -158,9 +177,10 @@ inline void Block::Collider()
 		///////  ///////
 		///////  ///////
 	*/
-		core.width = size * (2 / 3);
-		core.height = size * (2 / 3);
-		core.pos = origin;			
+		core.width = sizeOfRed; 
+		core.height = sizeOfRed; 
+		core.pos.x = origin.x;
+		core.pos.y = origin.y - (size / 3);			
 									
 		extra.width = 0;			
 		extra.height = 0;			
@@ -289,7 +309,7 @@ inline void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = sizeOfFive;				
+			core.width = sizeOfPurple;				
 			core.height = size / 3;					
 			core.pos.x = origin.x;					
 			core.pos.y = origin.y - (size * (2 / 3));
@@ -300,19 +320,19 @@ inline void Block::Collider()
 			break;									
 		case 1:										
 			core.width = size / 3;					
-			core.height = sizeOfFive;				
+			core.height = sizeOfPurple;				
 			core.pos.x += size * (2 / 3);
 			core.pos.y += size / 3;
 			break;
 		case 2:
-			core.width = sizeOfFive; 
+			core.width = sizeOfPurple; 
 			core.height = size / 3;
 			core.pos.x += size / 3;
 			core.pos.y -= size / 3;
 			break;
 		case 3:
 			core.width = size / 3;
-			core.height = sizeOfFive; 
+			core.height = sizeOfPurple; 
 			core.pos.x += size / 3; 
 			core.pos.y += size * (2 / 3); 
 			break;
@@ -377,4 +397,22 @@ inline void Block::Collider()
 		}
 		break;
 	}
+}
+
+void Block::WallCollision()
+{
+	Collider();
+
+	std::cout << position.y << std::endl;
+
+	//Left collision
+	if ((position.x + core.pos.x) <= 0) position.x = 0;
+
+	//Right collision
+	if ((position.x + core.width) >= ScreenWidth) position.x = (ScreenWidth - core.width);
+	else if ((position.x + extra.width) >= ScreenWidth) position.x = (ScreenWidth - extra.width);
+
+	//Bottom collision
+	if (position.y + core.pos.y >= ScreenHeight) position.y = ScreenHeight - core.pos.y;
+	else if (position.y + extra.pos.y >= ScreenHeight) position.y = ScreenHeight - extra.pos.y;
 }

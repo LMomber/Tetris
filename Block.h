@@ -16,7 +16,7 @@ public:
 		LightBlue
 	};
 
-	Block();
+	Block(Color color);
 
 	~Block();
 
@@ -24,18 +24,25 @@ public:
 	void SetPosition(const vec pos);
 
 	const int GetSize() const;
+	const int GetSizeOfRed() const;
+	const int GetSizeOfPurple() const;
+
+	const int GetFrame() const;
 
 	int FramePlus();
 
 	void Collider();
+	void WallCollision();
 
 private:
-	Color color;
-	Shape::Rectangle core;
-	Shape::Rectangle extra;
+	Color color{ Blue };
+	Shape::Rectangle core{ 0 };
+	Shape::Rectangle extra{ 0 };
 
 	int frame{ 0 };
 	int size = 100;
-	int sizeOfFive = size + size * (2 / 3);
-	vec origin{ 0, 100 }; //bottom left of 3x3 grid
+	int sizeOfRed = size * 0.66;
+	int sizeOfPurple = size * 1.66;
+	vec origin{ 0, size }; //bottom left of 3x3 grid
+	vec position{ origin };
 };

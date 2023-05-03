@@ -27,27 +27,26 @@ private:
 
 	SDL_Event event;
 
-	Block block;
-
-	Block::Color blockColor;
+	Block::Color blockColor = Block::Blue;   
+	Block block{ blockColor };
 
 	Sprite blue{ new Surface("assets/blue.png"), 4 };
-	Sprite green{ new Surface("assets/blue.png"), 4 };
-	Sprite lightBlue{ new Surface("assets/blue.png"), 4 };
-	Sprite orange{ new Surface("assets/blue.png"), 4 };
-	Sprite yellow{ new Surface("assets/blue.png"), 4 };
-	Sprite purple{ new Surface("assets/blue.png"), 4 };
-	Sprite red{ new Surface("assets/blue.png"), 1 };
-
-	//Variables for registering mouse clicks
-	int mouseX, mouseY;
-	int mousePressed;
-	int mouseReleased;
+	Sprite green{ new Surface("assets/green.png"), 4 };
+	Sprite lightBlue{ new Surface("assets/lightblue.png"), 4 };
+	Sprite orange{ new Surface("assets/orange.png"), 4 };
+	Sprite yellow{ new Surface("assets/yellow.png"), 4 };
+	Sprite purple{ new Surface("assets/purple.png"), 4 };
+	Sprite red{ new Surface("assets/red.png"), 1 };
 
 	Graphics::Timer blockTimer;
 
 	int elapsedSeconds{ 0 };
 	int lastSecond{ 0 };
+
+	//Variables for registering mouse clicks
+	int mouseX, mouseY;
+	int mousePressed;
+	int mouseReleased;
 };
 
 }; // namespace Tmpl8
