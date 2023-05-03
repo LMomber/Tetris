@@ -20,10 +20,9 @@ namespace Tmpl8
         //Move blocks downwards
         if (elapsedSeconds > lastSecond)
         {
-            blockY += static_cast<int>(blockHeight / 3);
+            block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
             lastSecond = elapsedSeconds;
         }
-
 
         //Rotating & moving blocks on keypress
         while (SDL_PollEvent(&event)) {
@@ -33,16 +32,16 @@ namespace Tmpl8
                 /* Check the SDLKey values and move change the coords */
                 switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
-                    blockX -= static_cast<int>(blockWidth / 3); 
+                    block.SetPosition({ block.GetPosition().x - static_cast<int>(block.GetSize() / 3), block.GetPosition().y});
                     break;
                 case SDLK_RIGHT:
-                    blockX += static_cast<int>(blockWidth / 3); 
+                    block.SetPosition({ block.GetPosition().x + static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
                     break;
                 case SDLK_UP:
-                    blue.SetFrame(FramePlus());
+                    blue.SetFrame(block.FramePlus());
                     break;
                 case SDLK_DOWN:
-                    blockY += static_cast<int>(blockHeight / 3);
+                    block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
                     break;
                 default:
                     break;
@@ -51,19 +50,33 @@ namespace Tmpl8
         }
 
         screen->Clear(0); 
-        drawBlock(blue); 
+        drawBlock(); 
 	}
 
-    void Game::drawBlock(Sprite& color)
+    void Game::drawBlock()
     {
-        color.DrawScaled(blockX, blockY, blockWidth, blockHeight, screen);
-    }
-
-    int Game::FramePlus()
-    {
-        if (blockFrame < 3) blockFrame++;
-        else blockFrame = 0;
-
-        return blockFrame;
+        switch (blockColor) {
+        case Block::Blue:
+            blue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break; 
+        case Block::Green: 
+            green.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break;
+        case Block::Red:
+            red.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break;
+        case Block::Orange:
+            orange.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break;
+        case Block::Yellow:
+            yellow.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break;
+        case Block::Purple:
+            purple.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break;
+        case Block::LightBlue:
+            lightBlue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen); 
+            break;
+        }
     }
 };

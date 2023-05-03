@@ -1,12 +1,34 @@
 #include "Block.h"
 
-Block::Block(Color color):
-	color{color}
+Block::Block()
 {}
 
 
 Block::~Block()
 {
+}
+
+const vec Block::GetPosition() const
+{
+	return core.pos;
+}
+
+void Block::SetPosition(const vec pos)
+{
+	core.pos = pos;
+}
+
+const int Block::GetSize() const
+{
+	return size;
+}
+
+int Block::FramePlus()
+{
+	if (frame < 3) frame++; 
+	else frame = 0; 
+
+	return frame; 
 }
 
 inline void Block::Collider()
@@ -28,42 +50,42 @@ inline void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size * (2 / 3);
-			core.height = size / 3;	
+			core.width = size * static_cast<int>(2 / 3);
+			core.height = static_cast<int>(size / 3);
 			core.pos = origin;		
 									
-			extra.width = size * (2 / 3);
-			extra.height = size / 3;	
-			extra.pos.x = core.pos.x + (size / 3);
-			extra.pos.y = core.pos.y - (size / 3);
+			extra.width = size * static_cast<int>(2 / 3);
+			extra.height = static_cast<int>(size / 3);
+			extra.pos.x = core.pos.x + static_cast<int>(size / 3);
+			extra.pos.y = core.pos.y - static_cast<int>(size / 3);
 			break;
 		case 1:
-			core.width = size / 3;
-			core.height = size * (2 / 3);
-			core.pos.y -= size / 3;
+			core.width = static_cast<int>(size / 3);
+			core.height = size * static_cast<int>(2 / 3);
+			core.pos.y -= static_cast<int>(size / 3);
 
-			extra.width = size / 3;
-			extra.height = size * (2 / 3);
-			extra.pos.x = core.pos.x + (size / 3);
-			extra.pos.y = core.pos.y + (size / 3);
+			extra.width = static_cast<int>(size / 3);
+			extra.height = size * static_cast<int>(2 / 3);
+			extra.pos.x = core.pos.x + static_cast<int>(size / 3);
+			extra.pos.y = core.pos.y + static_cast<int>(size / 3);
 			break;
 		case 2:
-			core.width = size * (2 / 3); 
-			core.height = size / 3; 
+			core.width = size * static_cast<int>(2 / 3);
+			core.height = static_cast<int>(size / 3);
 
-			extra.width = size * (2 / 3); 
-			extra.height = size / 3;  
-			extra.pos.y = core.pos.y - (size * (2 / 3)); 
+			extra.width = size * static_cast<int>(2 / 3);
+			extra.height = static_cast<int>(size / 3);
+			extra.pos.y = core.pos.y - (size * static_cast<int>(2 / 3));
 			break;
 		case 3:
-			core.width = size / 3; 
-			core.height = size * (2 / 3); 
-			core.pos.x += size / 3; 
+			core.width = static_cast<int>(size / 3);
+			core.height = size * static_cast<int>(2 / 3);
+			core.pos.x += static_cast<int>(size / 3);
 
-			extra.width = size / 3; 
-			extra.height = size * (2 / 3); 
-			extra.pos.x = core.pos.x + (size / 3); 
-			extra.pos.y = core.pos.y + (size * (2 / 3)); 
+			extra.width = static_cast<int>(size / 3);
+			extra.height = size * static_cast<int>(2 / 3);
+			extra.pos.x = core.pos.x + static_cast<int>(size / 3);
+			extra.pos.y = core.pos.y + (size * static_cast<int>(2 / 3));
 			break;
 		}
 		break;

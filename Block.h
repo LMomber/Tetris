@@ -16,9 +16,16 @@ public:
 		LightBlue
 	};
 
-	Block(Color color);
+	Block();
 
 	~Block();
+
+	const vec GetPosition() const;
+	void SetPosition(const vec pos);
+
+	const int GetSize() const;
+
+	int FramePlus();
 
 	void Collider();
 
@@ -30,7 +37,5 @@ private:
 	int frame{ 0 };
 	int size = 100;
 	int sizeOfFive = size + size * (2 / 3);
-	vec origin{ 0,100 }; //bottom left of 3x3 grid
-	int X{ ScreenWidth / 2 - (size / 2) };
-	int Y{ 0 };
+	vec origin{ 0, 100 }; //bottom left of 3x3 grid
 };
