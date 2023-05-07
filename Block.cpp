@@ -25,12 +25,42 @@ const int Block::GetSize() const
 
 const int Block::GetSizeOfRed() const
 {
-	return sizeOfRed; 
+	return two; 
 }
 
 const int Block::GetSizeOfPurple() const
 {
-	return sizeOfPurple; 
+	return four; 
+}
+
+const int Block::GetCoreWidth() const
+{
+	return core.width;
+}
+
+const int Block::GetCoreHeight() const
+{
+	return core.height;
+}
+
+const vec Block::GetCorePos() const
+{
+	return core.pos;
+}
+
+const int Block::GetExtraWidth() const
+{
+	return extra.width;
+}
+
+const int Block::GetExtraHeight() const
+{
+	return extra.height;
+}
+
+const vec Block::GetExtraPos() const
+{
+	return extra.pos;
 }
 
 const int Block::GetFrame() const
@@ -54,7 +84,7 @@ void Block::Collider()
 {
 	//Relies on the fact that the frame will always increment by 1. (core.pos)
 	//core.pos and extra.pos are always the bottomleft corner of the colliders.
-	//core is always the collider closest to the origin, with the origin being the leftbottom corner.
+	//core is always the collider closest to the origin, with the origin being the leftbottom corner. If core & extra are as far from the origin, most left is core.
 	//extra.pos always relies on core or origin.
 	switch (color) {
 	case Color::Blue:
@@ -69,42 +99,43 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size * (2 / 3);
-			core.height = size / 3;	
-			core.pos = origin;		
-									
-			extra.width = size * (2 / 3);
-			extra.height = size / 3;	
-			extra.pos.x = core.pos.x + (size / 3);
-			extra.pos.y = core.pos.y - (size / 3);
+			core.width = two;
+			core.height = one;
+			core.pos = origin;
+
+			extra.width = two;
+			extra.height = one;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y - one;
 			break;
 		case 1:
-			core.width = size / 3;
-			core.height = size * (2 / 3);
-			core.pos.y -= size / 3;
+			core.width = one;
+			core.height = two;
+			core.pos.y -= one;
 
-			extra.width = size / 3;
-			extra.height = size * (2 / 3);
-			extra.pos.x = core.pos.x + (size / 3);
-			extra.pos.y = core.pos.y + (size / 3);
+			extra.width = one;
+			extra.height = two;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y + one;
 			break;
 		case 2:
-			core.width = size * (2 / 3); 
-			core.height = size / 3; 
+			core.width = two;
+			core.height = one;
 
-			extra.width = size * (2 / 3); 
-			extra.height = size / 3;  
-			extra.pos.y = core.pos.y - (size * (2 / 3)); 
+			extra.width = two;
+			extra.height = one;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y - one;
 			break;
 		case 3:
-			core.width = size / 3; 
-			core.height = size * (2 / 3); 
-			core.pos.x += size / 3; 
+			core.width = one;
+			core.height = two;
+			core.pos.x += one;
 
-			extra.width = size / 3; 
-			extra.height = size * (2 / 3); 
-			extra.pos.x = core.pos.x + (size / 3); 
-			extra.pos.y = core.pos.y + (size * (2 / 3)); 
+			extra.width = one;
+			extra.height = two;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y + one;
 			break;
 		}
 		break;
@@ -124,46 +155,46 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size / 3;	
-			core.height = size / 3;	
+			core.width = one;	
+			core.height = one;	
 			core.pos = origin;		
 									
-			extra.width = size / 3;	
-			extra.height = size;	
-			extra.pos.x = core.pos.x + (size / 3);
+			extra.width = one;	
+			extra.height = three;	
+			extra.pos.x = core.pos.x + one;
 			extra.pos.y = core.pos.y;
 			break;					
 		case 1:
-			core.width = size;
-			core.height = size / 3;
-			core.pos.y -= size / 3;
+			core.width = three;
+			core.height = one;
+			core.pos.y -= one;
 
-			extra.width = size / 3; 
-			extra.height = size / 3; 
+			extra.width = one; 
+			extra.height = one; 
 			extra.pos.x = core.pos.x;
-			extra.pos.y = core.pos.y - (size / 3);
+			extra.pos.y = core.pos.y - one;
 			break;
 		case 2:
-			core.width = size / 3;
-			core.height = size;
-			core.pos.x += size / 3; 
-			core.pos.y += size / 3; 
+			core.width = one;
+			core.height = three;
+			core.pos.x += one; 
+			core.pos.y += one; 
 
-			extra.width = size / 3; 
-			extra.height = size / 3; 
-			extra.pos.x = core.pos.x + (size / 3);
-			extra.pos.y = core.pos.y - (size * (2 / 3));
+			extra.width = one; 
+			extra.height = one; 
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y - two;
 			break;
 		case 3:
-			core.width = size; 
-			core.height = size / 3;
-			core.pos.x -= size / 3; 
-			core.pos.y -= size / 3; 
+			core.width = three; 
+			core.height = one;
+			core.pos.x -= one; 
+			core.pos.y -= one; 
 
-			extra.width = size / 3; 
-			extra.height = size / 3; 
-			extra.pos.x = core.pos.x + (size * (2 / 3));
-			extra.pos.y = core.pos.y + (size / 3);
+			extra.width = one; 
+			extra.height = one; 
+			extra.pos.x = core.pos.x + two;
+			extra.pos.y = core.pos.y + one;
 			break;
 		}
 		break;
@@ -177,14 +208,14 @@ void Block::Collider()
 		///////  ///////
 		///////  ///////
 	*/
-		core.width = sizeOfRed; 
-		core.height = sizeOfRed; 
+		core.width = two; 
+		core.height = two; 
 		core.pos.x = origin.x;
-		core.pos.y = origin.y - (size / 3);			
+		core.pos.y = origin.y - one;			
 									
 		extra.width = 0;			
 		extra.height = 0;			
-		extra.pos = origin;
+		extra.pos = core.pos; 
 		break;
 
 	case Color::Orange: 
@@ -199,42 +230,42 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size;		
-			core.height = size / 3;	
+			core.width = three;		
+			core.height = one;	
 			core.pos.x = origin.x;	
-			core.pos.y = origin.y - (size / 3);
+			core.pos.y = origin.y - one;
 												
-			extra.width = size / 3;				
-			extra.height = size / 3; 
-			extra.pos.x = origin.x + (size / 3);
+			extra.width = one;				
+			extra.height = one; 
+			extra.pos.x = origin.x + one;
 			extra.pos.y = origin.y;
 			break;
 		case 1:
-			core.width = size / 3;
-			core.height = size / 3;  
+			core.width = one;
+			core.height = one;  
 
-			extra.width = size / 3; 
-			extra.height = size; 
+			extra.width = one; 
+			extra.height = three; 
 			break;
 		case 2: 
-			core.width = size; 
-			core.height = size / 3; 
+			core.width = three; 
+			core.height = one; 
 
-			extra.width = size / 3; 
-			extra.height = size / 3; 
-			extra.pos.x = core.pos.x + (size / 3); 
-			extra.pos.y = core.pos.y - (size / 3); 
+			extra.width = one; 
+			extra.height = one; 
+			extra.pos.x = core.pos.x + one; 
+			extra.pos.y = core.pos.y - one; 
 			break;
 		case 3:
-			core.width = size / 3; 
-			core.height = size; 
-			core.pos.x += size / 3; 
-			core.pos.y += size / 3; 
+			core.width = one; 
+			core.height = three; 
+			core.pos.x += one; 
+			core.pos.y += one; 
 			 
-			extra.width = size / 3; 
-			extra.height = size / 3; 
-			extra.pos.x = core.pos.x + (size / 3); 
-			extra.pos.y = core.pos.y - (size / 3); 
+			extra.width = one; 
+			extra.height = one; 
+			extra.pos.x = core.pos.x + one; 
+			extra.pos.y = core.pos.y - one; 
 			break;
 		}
 		break;
@@ -250,42 +281,43 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size * (2 / 3);
-			core.height = size / 3;		
+			core.width = two;
+			core.height = one;		
 			core.pos.x = origin.x;		
-			core.pos.y = origin.y - (size / 3);	
+			core.pos.y = origin.y - one;	
 												
-			extra.width = size * (2 / 3);		
-			extra.height = size / 3;
-			extra.pos.x = origin.x + (size / 3);
+			extra.width = two;		
+			extra.height = one;
+			extra.pos.x = origin.x + one;
 			extra.pos.y = origin.y;
 			break;
 		case 1:
-			core.width = size / 3;
-			core.height = size * (2 / 3);
-			core.pos.y += size / 3;
+			core.width = one;
+			core.height = two;
+			core.pos.y += one;
 
-			extra.width = size / 3;
-			extra.height = size * (2 / 3);
-			extra.pos.x = core.pos.x + (size / 3);
-			extra.pos.y = core.pos.y - (size / 3);
+			extra.width = one;
+			extra.height = two;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y - one;
 			break;
 		case 2:
-			core.width = size * (2 / 3);
-			core.height = size / 3;
-			core.pos.y -= size * (2 / 3);
+			core.width = two;
+			core.height = one;
+			core.pos.y -= two;
 
-			extra.width = size * (2 / 3);
-			extra.height = size / 3;
+			extra.width = two;
+			extra.height = one;
 			break;
 		case 3:
-			core.width = size / 3;
-			core.height = size * (2 / 3);
-			core.pos.x += size / 3;
-			core.pos.y += size * (2 / 3);
+			core.width = one;
+			core.height = two;
+			core.pos.x += one;
+			core.pos.y += two;
 
-			extra.width = size / 3;
-			extra.height = size * (2 / 3);
+			extra.width = one;
+			extra.height = two;
+			extra.pos.x = core.pos.x + one;
 			break;
 		}
 		break;
@@ -309,32 +341,32 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = sizeOfPurple;				
-			core.height = size / 3;					
-			core.pos.x = origin.x;					
-			core.pos.y = origin.y - (size * (2 / 3));
-													
-			extra.width = 0;						
-			extra.height = 0;						
-			extra.pos = origin;						
-			break;									
-		case 1:										
-			core.width = size / 3;					
-			core.height = sizeOfPurple;				
-			core.pos.x += size * (2 / 3);
-			core.pos.y += size / 3;
+			core.width = four * 0.8;
+			core.height = one * 0.8;
+			core.pos.x = origin.x;
+			core.pos.y = (origin.y * 1.33) - (two * 0.8);
+
+			extra.width = 0;
+			extra.height = 0;
+			extra.pos = core.pos;
+			break;
+		case 1:
+			core.width = one * 0.8;
+			core.height = four * 0.8;
+			core.pos.x += two * 0.8;
+			core.pos.y += one * 0.8;
 			break;
 		case 2:
-			core.width = sizeOfPurple; 
-			core.height = size / 3;
-			core.pos.x += size / 3;
-			core.pos.y -= size / 3;
+			core.width = four * 0.8;
+			core.height = one * 0.8;
+			core.pos.x -= one * 0.8;
+			core.pos.y -= one * 0.8;
 			break;
 		case 3:
-			core.width = size / 3;
-			core.height = sizeOfPurple; 
-			core.pos.x += size / 3; 
-			core.pos.y += size * (2 / 3); 
+			core.width = one * 0.8;
+			core.height = four * 0.8;
+			core.pos.x += one * 0.8; 
+			core.pos.y += two * 0.8;
 			break;
 		}
 		break;
@@ -354,45 +386,45 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = size / 3;										
-			core.height = size;								
-			core.pos.x = origin.x + (size / 3);				
+			core.width = one;										
+			core.height = three;								
+			core.pos.x = origin.x + one;				
 			core.pos.y = origin.y;							
 									 						
-			extra.width = size / 3;	 						
-			extra.height = size / 3;	 												
-			extra.pos.x = core.pos.x + (size / 3);			 							
+			extra.width = one;	 						
+			extra.height = one;	 												
+			extra.pos.x = core.pos.x + one;			 							
 			extra.pos.y = core.pos.y;													
 			break;														
 		case 1:
-			core.width = size / 3; 
-			core.height = size / 3; 
-			extra.pos.x = core.pos.x - (size / 3);
+			core.width = one; 
+			core.height = one; 
+			core.pos.x = core.pos.x - one;
 
-			extra.width = size; 
-			extra.height = size / 3; 
+			extra.width = three; 
+			extra.height = one; 
 			extra.pos.x = core.pos.x; 
-			extra.pos.y = core.pos.y - (size / 3); 
+			extra.pos.y = core.pos.y - one; 
 			break;
 		case 2:
-			core.width = size / 3; 
-			core.height = size / 3; 
-			core.pos.y -= size * (2 / 3); 
+			core.width = one; 
+			core.height = one; 
+			core.pos.y -= two; 
 
-			extra.width = size / 3; 
-			extra.height = size; 
-			extra.pos.x = core.pos.x + (size / 3); 
-			extra.pos.y = core.pos.y + (size * (2 / 3)); 
+			extra.width = one; 
+			extra.height = three; 
+			extra.pos.x = core.pos.x + one; 
+			extra.pos.y = core.pos.y + two; 
 			break;
 		case 3:
-			core.width = size; 
-			core.height = size / 3; 
-			core.pos.y += size / 3;
+			core.width = three; 
+			core.height = one; 
+			core.pos.y += one;
 
-			extra.width = size / 3; 
-			extra.height = size / 3; 
-			extra.pos.x = core.pos.x + (size * (2 / 3)); 
-			extra.pos.y = core.pos.y - (size / 3); 
+			extra.width = one; 
+			extra.height = one; 
+			extra.pos.x = core.pos.x + two; 
+			extra.pos.y = core.pos.y - one; 
 			break;
 		}
 		break;
@@ -401,16 +433,14 @@ void Block::Collider()
 
 void Block::WallCollision()
 {
-	std::cout << position.y << std::endl;
-
 	//Left collision
 	if ((position.x + core.pos.x) <= 0) position.x = 0;
 
 	//Right collision
-	if ((position.x + core.width) >= ScreenWidth) position.x = (ScreenWidth - core.width);
-	else if ((position.x + extra.width) >= ScreenWidth) position.x = (ScreenWidth - extra.width);
+	if ((position.x + extra.pos.x + extra.width) >= ScreenWidth) position.x = (ScreenWidth - extra.pos.x - extra.width);
+	if ((position.x + core.pos.x + core.width) >= ScreenWidth) position.x = (ScreenWidth - core.pos.x - core.width);
 
 	//Bottom collision
-	if (position.y >= ScreenHeight - core.pos.y) position.y = ScreenHeight - core.pos.y;
-	else if (position.y >= ScreenHeight - extra.pos.y) position.y = ScreenHeight - extra.pos.y;
+	if (position.y + extra.pos.y >= ScreenHeight) position.y = ScreenHeight - extra.pos.y;
+	if (position.y + core.pos.y >= ScreenHeight) position.y = ScreenHeight - core.pos.y;
 }

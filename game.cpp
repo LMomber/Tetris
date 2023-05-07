@@ -8,6 +8,7 @@ namespace Tmpl8
 	{
 		blockTimer.reset();
 		block.SetPosition({ (ScreenWidth / 2) - (block.GetSize() / 2), block.GetSize() });
+		block.Collider();
 	}
 
 	void Game::Shutdown()
@@ -80,6 +81,66 @@ namespace Tmpl8
 		}
 	}
 
+#ifdef _DEBUG
+	void Game::drawBlock()
+	{
+		switch (blockColor) {
+		case Block::Blue:
+			blue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			break;
+		case Block::Green:
+			green.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			break;
+		case Block::Red:
+			red.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSizeOfRed(), block.GetSizeOfRed(), screen);
+			break;
+		case Block::Orange:
+			orange.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			break;
+		case Block::Yellow:
+			yellow.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			break;
+		case Block::Purple:
+			purple.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSizeOfPurple(), block.GetSizeOfPurple(), screen);
+			break;
+		case Block::LightBlue:
+			lightBlue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			break;
+		}
+
+		//Core x1
+		int x1 = block.GetPosition().x + block.GetCorePos().x;
+		//screen->Line(x1, 0, x1, ScreenHeight, 0x00ff00);
+		//Core x2
+		int x2 = block.GetPosition().x + block.GetCorePos().x + block.GetCoreWidth();
+		//screen->Line(x2, 0, x2, ScreenHeight, 0x00ff00);
+		//Core y1
+		int y1 = block.GetPosition().y + block.GetCorePos().y;
+		//screen->Line(0, y1, ScreenWidth, y1, 0x00ff00);
+		//Core y2
+		int y2 = block.GetPosition().y + block.GetCorePos().y - block.GetCoreHeight();
+		//screen->Line(0, y2, ScreenWidth, y2, 0x00ff00);
+
+		//Core Box
+		screen->Box(x1, y1, x2, y2, 0x00ff00);
+
+		//Core x1
+		int x3 = block.GetPosition().x + block.GetExtraPos().x;
+		//screen->Line(x3, 0, x3, ScreenHeight, 0x00ff00);
+		//Core x2
+		int x4 = block.GetPosition().x + block.GetExtraPos().x + block.GetExtraWidth();
+		//screen->Line(x4, 0, x4, ScreenHeight, 0x00ff00);
+		//Core y1
+		int y3 = block.GetPosition().y + block.GetExtraPos().y;
+		//screen->Line(0, y3, ScreenWidth, y3, 0x00ff00);
+		//Core y2
+		int y4 = block.GetPosition().y + block.GetExtraPos().y - block.GetExtraHeight();
+		//screen->Line(0, y4, ScreenWidth, y4, 0x00ff00);
+
+		//Core Box
+		screen->Box(x3, y3, x4, y4, 0xff0000);
+	}
+#else
 	void Game::drawBlock()
 	{
 		switch (blockColor) {
@@ -106,4 +167,5 @@ namespace Tmpl8
 			break;
 		}
 	}
+#endif
 };

@@ -27,6 +27,13 @@ public:
 	const int GetSizeOfRed() const;
 	const int GetSizeOfPurple() const;
 
+	const int GetCoreWidth() const;
+	const int GetCoreHeight() const;
+	const vec GetCorePos() const;
+	const int GetExtraWidth() const;
+	const int GetExtraHeight() const;
+	const vec GetExtraPos() const;
+
 	const int GetFrame() const;
 
 	int FramePlus();
@@ -41,8 +48,12 @@ private:
 
 	int frame{ 0 };
 	int size = 100;
-	int sizeOfRed = size * 0.66;
-	int sizeOfPurple = size * 1.66;
+
+	int one = size * 0.33;
+	int two = size * 0.66;
+	int three = size;
+	int four = size * 1.33;
+
 	vec origin{ 0, size }; //bottom left of 3x3 grid
 	vec position{ origin };
 };
