@@ -31,6 +31,7 @@ public:
 	const int GetCoreWidth() const;
 	const int GetCoreHeight() const;
 	const vec GetCorePos() const;
+
 	const int GetExtraWidth() const;
 	const int GetExtraHeight() const;
 	const vec GetExtraPos() const;

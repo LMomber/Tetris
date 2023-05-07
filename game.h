@@ -57,6 +57,9 @@ private:
 	float onGroundTimeStamp{ 0 };
 	bool timeStampTaken{ false };
 	bool moveLock{ false };
+
+	vec startPosition = { leftBorder + (block.GetSizeOne() * 4), 
+		(block.GetCoreHeight() > block.GetExtraHeight() ? block.GetCoreHeight() : block.GetExtraHeight())};
 };
 
 }; // namespace Tmpl8

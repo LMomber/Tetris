@@ -7,8 +7,8 @@ namespace Tmpl8
 	void Game::Init()
 	{
 		blockTimer.reset();
-		block.SetPosition({ (ScreenWidth / 2) - (block.GetSize() / 2), block.GetSize() });
-		block.Collider();
+		block.Collider(); 
+		block.SetPosition(startPosition);
 	}
 
 	void Game::Shutdown()
@@ -45,7 +45,7 @@ namespace Tmpl8
 				timeStampTaken = true;
 			}
 
-			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 1.0f)
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 0.4f)
 				moveLock = true;
 		}
 	}

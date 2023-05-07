@@ -1,0 +1,12 @@
+To-do list Tetris:
+
+- Center playing field
+- Destruct old blocks
+- Add destructed block collisions to ground collision
+- Fix spawnpoint / construct a new block
+- Randomizer
+- High score
+- Speed up after time
+- Game over
+- Save block
+- show next blocks
