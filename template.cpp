@@ -10,9 +10,6 @@
 #pragma warning (disable : 4311) // pointer truncation from HANDLE to long
 #endif
 
-//#define FULLSCREEN
-//#define ADVANCEDGL
-
 #include "game.h"
 
 #include <fcntl.h>

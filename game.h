@@ -19,8 +19,8 @@ public:
 	void MouseUp( int button ) { mouseReleased = button; if (mouseReleased) mousePressed = 0; }
 	void MouseDown( int button ) { mousePressed = button; if (mousePressed) mouseReleased = 0; }
 	void MouseMove(int x, int y) { mouseX = x, mouseY = y; }
-	void KeyUp( int key = 0 ) { /* implement if you want to handle keys */ }
-	void KeyDown( int key = 0 ) { /* implement if you want to handle keys */ }
+	void KeyUp(int key = 0) {/*Up for implementation*/ }
+	void KeyDown(int key = 0);
 	void drawBlock();
 private:
 	Surface* screen;
@@ -47,6 +47,8 @@ private:
 	int mouseX, mouseY;
 	int mousePressed;
 	int mouseReleased;
+
+	bool up, down, left, right{ false };
 };
 
 }; // namespace Tmpl8
