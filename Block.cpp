@@ -401,8 +401,6 @@ void Block::Collider()
 
 void Block::WallCollision()
 {
-	Collider();
-
 	std::cout << position.y << std::endl;
 
 	//Left collision
@@ -413,6 +411,6 @@ void Block::WallCollision()
 	else if ((position.x + extra.width) >= ScreenWidth) position.x = (ScreenWidth - extra.width);
 
 	//Bottom collision
-	if (position.y + core.pos.y >= ScreenHeight) position.y = ScreenHeight - core.pos.y;
-	else if (position.y + extra.pos.y >= ScreenHeight) position.y = ScreenHeight - extra.pos.y;
+	if (position.y >= ScreenHeight - core.pos.y) position.y = ScreenHeight - core.pos.y;
+	else if (position.y >= ScreenHeight - extra.pos.y) position.y = ScreenHeight - extra.pos.y;
 }

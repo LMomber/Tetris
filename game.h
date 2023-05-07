@@ -27,7 +27,7 @@ private:
 
 	SDL_Event event;
 
-	Block::Color blockColor = Block::Blue;   
+	Block::Color blockColor = Block::Purple;   
 	Block block{ blockColor };
 
 	Sprite blue{ new Surface("assets/blue.png"), 4 };

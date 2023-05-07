@@ -65,6 +65,9 @@ namespace Tmpl8
                         lightBlue.SetFrame(block.GetFrame()); 
                         break;
                     }
+
+                    block.Collider();
+
                     break;
                 case SDLK_DOWN:
                     block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
