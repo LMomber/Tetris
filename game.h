@@ -27,7 +27,7 @@ private:
 
 	SDL_Event event;
 
-	Block::Color blockColor = Block::Purple;   
+	Block::Color blockColor = Block::Purple;
 	Block block{ blockColor };
 
 	Sprite blue{ new Surface("assets/blue.png"), 4 };
@@ -49,6 +49,14 @@ private:
 	int mouseReleased;
 
 	bool up, down, left, right{ false };
+
+	int bottomBorder = ScreenHeight - 60;
+	int leftBorder = (ScreenWidth / 2) - (block.GetSizeOne() * 5);
+	int rightBorder = (ScreenWidth / 2) + (block.GetSizeOne() * 5);
+
+	float onGroundTimeStamp{ 0 };
+	bool timeStampTaken{ false };
+	bool moveLock{ false };
 };
 
 }; // namespace Tmpl8

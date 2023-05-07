@@ -27,59 +27,81 @@ namespace Tmpl8
 			lastSecond = elapsedSeconds;
 		}
 		
-		block.WallCollision();
+		block.WallCollision(leftBorder, rightBorder, bottomBorder);
 
 		screen->Clear(0);
 		drawBlock();
 
-		screen->Line(0, ScreenHeight - (block.GetSize() / 3), ScreenWidth, ScreenHeight - (block.GetSize()/3), 0xffffff);
+		screen->Line(leftBorder, bottomBorder - (block.GetSize() / 3), rightBorder, bottomBorder - (block.GetSize()/3), 0xffffff);
+		screen->Line(leftBorder, bottomBorder, rightBorder, bottomBorder, 0xffffff);
+		screen->Line(leftBorder, 0, leftBorder, bottomBorder, 0xffffff);
+		screen->Line(rightBorder, 0, rightBorder, bottomBorder, 0xffffff);
+		
+		if (block.onGround(bottomBorder))
+		{
+			if (!timeStampTaken)
+			{
+				onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+				timeStampTaken = true;
+			}
+
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 1.0f)
+				moveLock = true;
+		}
 	}
 
 	void Game::KeyDown(int key)
 	{
-		switch (key) {
-		case SDL_SCANCODE_W:
-		case SDL_SCANCODE_UP:
-			block.FramePlus();
+		if (moveLock)
+		{
 
-			switch (blockColor) {
-			case Block::Blue:
-				blue.SetFrame(block.GetFrame());
+		}
+		else
+		{
+			switch (key) {
+			case SDL_SCANCODE_W:
+			case SDL_SCANCODE_UP:
+				block.FramePlus();
+
+				switch (blockColor) {
+				case Block::Blue:
+					blue.SetFrame(block.GetFrame());
+					break;
+				case Block::Green:
+					green.SetFrame(block.GetFrame());
+					break;
+				case Block::Red:
+					red.SetFrame(block.GetFrame());
+					break;
+				case Block::Orange:
+					orange.SetFrame(block.GetFrame());
+					break;
+				case Block::Yellow:
+					yellow.SetFrame(block.GetFrame());
+					break;
+				case Block::Purple:
+					purple.SetFrame(block.GetFrame());
+					break;
+				case Block::LightBlue:
+					lightBlue.SetFrame(block.GetFrame());
+					break;
+				}
+
+				block.Collider();
 				break;
-			case Block::Green:
-				green.SetFrame(block.GetFrame());
+			case SDL_SCANCODE_S:
+			case SDL_SCANCODE_DOWN:
+				block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
 				break;
-			case Block::Red:
-				red.SetFrame(block.GetFrame());
+			case SDL_SCANCODE_A:
+			case SDL_SCANCODE_LEFT:
+				block.SetPosition({ block.GetPosition().x - static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
 				break;
-			case Block::Orange:
-				orange.SetFrame(block.GetFrame());
-				break;
-			case Block::Yellow:
-				yellow.SetFrame(block.GetFrame());
-				break;
-			case Block::Purple:
-				purple.SetFrame(block.GetFrame());
-				break;
-			case Block::LightBlue:
-				lightBlue.SetFrame(block.GetFrame());
+			case SDL_SCANCODE_D:
+			case SDL_SCANCODE_RIGHT:
+				block.SetPosition({ block.GetPosition().x + static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
 				break;
 			}
-
-			block.Collider();
-			break;
-		case SDL_SCANCODE_S:
-		case SDL_SCANCODE_DOWN:
-			block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
-			break;
-		case SDL_SCANCODE_A:
-		case SDL_SCANCODE_LEFT:
-			block.SetPosition({ block.GetPosition().x - static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
-			break;
-		case SDL_SCANCODE_D:
-		case SDL_SCANCODE_RIGHT:
-			block.SetPosition({ block.GetPosition().x + static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
-			break;
 		}
 	}
 

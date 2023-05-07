@@ -23,6 +23,11 @@ const int Block::GetSize() const
 	return size;
 }
 
+const int Block::GetSizeOne() const
+{
+	return one;
+}
+
 const int Block::GetSizeOfRed() const
 {
 	return two; 
@@ -84,8 +89,9 @@ void Block::Collider()
 {
 	//Relies on the fact that the frame will always increment by 1. (core.pos)
 	//core.pos and extra.pos are always the bottomleft corner of the colliders.
-	//core is always the collider closest to the origin, with the origin being the leftbottom corner. If core & extra are as far from the origin, most left is core.
-	//extra.pos always relies on core or origin.
+	//core is always the collider closest to the origin, with the origin being the leftbottom corner. 
+	//If core & extra are equally as far from the origin, most left is core.
+	//extra.pos always relies on core.pos.
 	switch (color) {
 	case Color::Blue:
 	/*
@@ -344,7 +350,7 @@ void Block::Collider()
 			core.width = four;
 			core.height = one;
 			core.pos.x = origin.x;
-			core.pos.y = (origin.y * 1.66) - (two);
+			core.pos.y = static_cast<int>(origin.y * 1.66) - (two);
 
 			extra.width = 0;
 			extra.height = 0;
@@ -355,18 +361,24 @@ void Block::Collider()
 			core.height = four;
 			core.pos.x += two;
 			core.pos.y += one;
+
+			extra.pos = core.pos;
 			break;
 		case 2:
 			core.width = four;
 			core.height = one;
 			core.pos.x -= one;
 			core.pos.y -= one;
+
+			extra.pos = core.pos;
 			break;
 		case 3:
 			core.width = one;
 			core.height = four;
 			core.pos.x += one; 
 			core.pos.y += two;
+
+			extra.pos = core.pos;
 			break;
 		}
 		break;
@@ -431,16 +443,27 @@ void Block::Collider()
 	}
 }
 
-void Block::WallCollision()
+void Block::WallCollision(const int& left, const int& right, const int& bottom)
 {
 	//Left collision
-	if ((position.x + core.pos.x) <= 0) position.x = 0 - core.pos.x;
+	if ((position.x + core.pos.x) <= left) position.x = left - core.pos.x;
 
 	//Right collision
-	if ((position.x + extra.pos.x + extra.width) >= ScreenWidth) position.x = (ScreenWidth - extra.pos.x - extra.width);
-	if ((position.x + core.pos.x + core.width) >= ScreenWidth) position.x = (ScreenWidth - core.pos.x - core.width);
+	if ((position.x + extra.pos.x + extra.width) >= right) position.x = (right - extra.pos.x - extra.width);
+	if ((position.x + core.pos.x + core.width) >= right) position.x = (right - core.pos.x - core.width);
 
 	//Bottom collision
-	if (position.y + extra.pos.y >= ScreenHeight) position.y = ScreenHeight - extra.pos.y;
-	if (position.y + core.pos.y >= ScreenHeight) position.y = ScreenHeight - core.pos.y;
+	if (position.y + extra.pos.y >= bottom) position.y = bottom - extra.pos.y;
+	if (position.y + core.pos.y >= bottom) position.y = bottom - core.pos.y;
+}
+
+bool Block::onGround(const int& bottom)
+{
+	//Bottom collision
+	if (position.y + extra.pos.y >= bottom)
+		return true;
+	if (position.y + core.pos.y >= bottom)
+		return true;
+
+	return false;
 }

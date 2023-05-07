@@ -24,6 +24,7 @@ public:
 	void SetPosition(const vec pos);
 
 	const int GetSize() const;
+	const int GetSizeOne() const;
 	const int GetSizeOfRed() const;
 	const int GetSizeOfPurple() const;
 
@@ -39,7 +40,9 @@ public:
 	int FramePlus();
 
 	void Collider();
-	void WallCollision();
+	void WallCollision(const int& left, const int& right, const int& bottom);
+
+	bool onGround(const int& bottom);
 
 private:
 	Color color{ Blue };
@@ -49,11 +52,11 @@ private:
 	int frame{ 0 };
 	int size = 100;
 
-	int one = size * 0.33;
-	int two = size * 0.66;
+	int one = static_cast<int>(size * 0.33);
+	int two = static_cast<int>(size * 0.66); 
 	int three = size;
-	int four = size * 1.33;
-	int five = size * 1.66;
+	int four = static_cast<int>(size * 1.33);
+	int five = static_cast<int>(size * 1.66);
 
 	vec origin{ 0, size }; //bottom left of 3x3 grid
 	vec position{ origin };
