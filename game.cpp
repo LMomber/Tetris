@@ -31,6 +31,8 @@ namespace Tmpl8
 
 		screen->Clear(0);
 		drawBlock();
+
+		screen->Line(0, ScreenHeight - (block.GetSize() / 3), ScreenWidth, ScreenHeight - (block.GetSize()/3), 0xffffff);
 	}
 
 	void Game::KeyDown(int key)

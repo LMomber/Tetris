@@ -30,7 +30,7 @@ const int Block::GetSizeOfRed() const
 
 const int Block::GetSizeOfPurple() const
 {
-	return four; 
+	return five; 
 }
 
 const int Block::GetCoreWidth() const
@@ -341,32 +341,32 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = four * 0.8;
-			core.height = one * 0.8;
+			core.width = four;
+			core.height = one;
 			core.pos.x = origin.x;
-			core.pos.y = (origin.y * 1.33) - (two * 0.8);
+			core.pos.y = (origin.y * 1.66) - (two);
 
 			extra.width = 0;
 			extra.height = 0;
 			extra.pos = core.pos;
 			break;
 		case 1:
-			core.width = one * 0.8;
-			core.height = four * 0.8;
-			core.pos.x += two * 0.8;
-			core.pos.y += one * 0.8;
+			core.width = one;
+			core.height = four;
+			core.pos.x += two;
+			core.pos.y += one;
 			break;
 		case 2:
-			core.width = four * 0.8;
-			core.height = one * 0.8;
-			core.pos.x -= one * 0.8;
-			core.pos.y -= one * 0.8;
+			core.width = four;
+			core.height = one;
+			core.pos.x -= one;
+			core.pos.y -= one;
 			break;
 		case 3:
-			core.width = one * 0.8;
-			core.height = four * 0.8;
-			core.pos.x += one * 0.8; 
-			core.pos.y += two * 0.8;
+			core.width = one;
+			core.height = four;
+			core.pos.x += one; 
+			core.pos.y += two;
 			break;
 		}
 		break;
@@ -434,7 +434,7 @@ void Block::Collider()
 void Block::WallCollision()
 {
 	//Left collision
-	if ((position.x + core.pos.x) <= 0) position.x = 0;
+	if ((position.x + core.pos.x) <= 0) position.x = 0 - core.pos.x;
 
 	//Right collision
 	if ((position.x + extra.pos.x + extra.width) >= ScreenWidth) position.x = (ScreenWidth - extra.pos.x - extra.width);

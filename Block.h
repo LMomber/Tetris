@@ -53,6 +53,7 @@ private:
 	int two = size * 0.66;
 	int three = size;
 	int four = size * 1.33;
+	int five = size * 1.66;
 
 	vec origin{ 0, size }; //bottom left of 3x3 grid
 	vec position{ origin };
