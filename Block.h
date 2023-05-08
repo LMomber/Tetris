@@ -38,6 +38,8 @@ public:
 
 	const int GetFrame() const;
 
+	void SetColor(const Block::Color color);
+
 	int FramePlus();
 
 	void Collider();

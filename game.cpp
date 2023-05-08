@@ -17,15 +17,15 @@ namespace Tmpl8
 
 	void Game::Tick(float deltaTime)
 	{
-		blockTimer.tick();
-		elapsedSeconds = static_cast<int>(blockTimer.totalSeconds());
+		//blockTimer.tick();
+		//elapsedSeconds = static_cast<int>(blockTimer.totalSeconds());
 
-		//Move blocks downwards
-		if (elapsedSeconds > lastSecond)
-		{
-			block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
-			lastSecond = elapsedSeconds;
-		}
+		////Move blocks downwards
+		//if (elapsedSeconds > lastSecond)
+		//{
+		//	block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
+		//	lastSecond = elapsedSeconds;
+		//}
 		
 		block.WallCollision(leftBorder, rightBorder, bottomBorder);
 

@@ -73,6 +73,11 @@ const int Block::GetFrame() const
 	return frame; 
 }
 
+void Block::SetColor(const Block::Color color)
+{
+	this->color = color;
+}
+
 int Block::FramePlus()
 {
 	if (color == Red) frame = 0;
@@ -105,26 +110,16 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = two;
-			core.height = one;
-			core.pos = origin;
+			core.width = one;
+			core.height = two;
+			core.pos.y = origin.y - one;
 
-			extra.width = two;
-			extra.height = one;
+			extra.width = one;
+			extra.height = two;
 			extra.pos.x = core.pos.x + one;
-			extra.pos.y = core.pos.y - one;
+			extra.pos.y = core.pos.y + one;
 			break;
 		case 1:
-			core.width = one;
-			core.height = two;
-			core.pos.y -= one;
-
-			extra.width = one;
-			extra.height = two;
-			extra.pos.x = core.pos.x + one;
-			extra.pos.y = core.pos.y + one;
-			break;
-		case 2:
 			core.width = two;
 			core.height = one;
 
@@ -133,15 +128,27 @@ void Block::Collider()
 			extra.pos.x = core.pos.x + one;
 			extra.pos.y = core.pos.y - one;
 			break;
-		case 3:
+		case 2:
 			core.width = one;
 			core.height = two;
-			core.pos.x += one;
+			core.pos.x = core.pos.x + one;
+			core.pos.y = core.pos.y;
 
 			extra.width = one;
 			extra.height = two;
 			extra.pos.x = core.pos.x + one;
 			extra.pos.y = core.pos.y + one;
+			break;
+		case 3:
+			core.width = two;
+			core.height = one;
+			core.pos.x -= one;
+			core.pos.y += one;
+
+			extra.width = two;
+			extra.height = one;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y - one;
 			break;
 		}
 		break;
@@ -236,42 +243,45 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = three;		
+			core.width = one;		
 			core.height = one;	
 			core.pos.x = origin.x;	
 			core.pos.y = origin.y - one;
 												
 			extra.width = one;				
-			extra.height = one; 
+			extra.height = three; 
 			extra.pos.x = origin.x + one;
 			extra.pos.y = origin.y;
 			break;
 		case 1:
-			core.width = one;
+			core.width = three;
 			core.height = one;  
 
 			extra.width = one; 
-			extra.height = three; 
+			extra.height = one;
+			extra.pos.y = core.pos.y - one;
 			break;
 		case 2: 
-			core.width = three; 
-			core.height = one; 
+			core.width = one; 
+			core.height = three; 
+			core.pos.x += one;
+			core.pos.y += one;
 
 			extra.width = one; 
 			extra.height = one; 
 			extra.pos.x = core.pos.x + one; 
-			extra.pos.y = core.pos.y - one; 
+			extra.pos.y = core.pos.y - one;
 			break;
 		case 3:
-			core.width = one; 
-			core.height = three; 
-			core.pos.x += one; 
-			core.pos.y += one; 
+			core.width = three; 
+			core.height = one; 
+			core.pos.x -= one; 
+			core.pos.y -= one; 
 			 
 			extra.width = one; 
 			extra.height = one; 
 			extra.pos.x = core.pos.x + one; 
-			extra.pos.y = core.pos.y - one; 
+			extra.pos.y = core.pos.y + one; 
 			break;
 		}
 		break;
@@ -287,35 +297,27 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = two;
-			core.height = one;		
-			core.pos.x = origin.x;		
-			core.pos.y = origin.y - one;	
-												
-			extra.width = two;		
-			extra.height = one;
-			extra.pos.x = origin.x + one;
-			extra.pos.y = origin.y;
-			break;
-		case 1:
 			core.width = one;
-			core.height = two;
-			core.pos.y += one;
-
-			extra.width = one;
+			core.height = two;		
+			core.pos.x = origin.x;		
+			core.pos.y = origin.y;	
+												
+			extra.width = one;		
 			extra.height = two;
 			extra.pos.x = core.pos.x + one;
 			extra.pos.y = core.pos.y - one;
 			break;
-		case 2:
+		case 1:
 			core.width = two;
 			core.height = one;
 			core.pos.y -= two;
 
 			extra.width = two;
 			extra.height = one;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y + one;
 			break;
-		case 3:
+		case 2:
 			core.width = one;
 			core.height = two;
 			core.pos.x += one;
@@ -324,6 +326,17 @@ void Block::Collider()
 			extra.width = one;
 			extra.height = two;
 			extra.pos.x = core.pos.x + one;
+			break;
+		case 3:
+			core.width = two;
+			core.height = one;
+			core.pos.x -= one;
+			core.pos.y -= one;
+
+			extra.width = two;
+			extra.height = one;
+			extra.pos.x = core.pos.x + one;
+			extra.pos.y = core.pos.y + one;
 			break;
 		}
 		break;
@@ -347,24 +360,16 @@ void Block::Collider()
 	*/
 		switch (frame) {
 		case 0:
-			core.width = four;
-			core.height = one;
-			core.pos.x = origin.x;
-			core.pos.y = static_cast<int>(origin.y * 1.66) - (two);
+			core.width = one;
+			core.height = four;
+			core.pos.x = origin.x + two;
+			core.pos.y = static_cast<int>(origin.y * 1.66) - (one);
 
 			extra.width = 0;
 			extra.height = 0;
 			extra.pos = core.pos;
 			break;
 		case 1:
-			core.width = one;
-			core.height = four;
-			core.pos.x += two;
-			core.pos.y += one;
-
-			extra.pos = core.pos;
-			break;
-		case 2:
 			core.width = four;
 			core.height = one;
 			core.pos.x -= one;
@@ -372,11 +377,19 @@ void Block::Collider()
 
 			extra.pos = core.pos;
 			break;
-		case 3:
+		case 2:
 			core.width = one;
 			core.height = four;
-			core.pos.x += one; 
+			core.pos.x += one;
 			core.pos.y += two;
+
+			extra.pos = core.pos;
+			break;
+		case 3:
+			core.width = four;
+			core.height = one;
+			core.pos.x -= two; 
+			core.pos.y -= two;
 
 			extra.pos = core.pos;
 			break;
