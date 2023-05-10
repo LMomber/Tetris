@@ -11,8 +11,8 @@
 #include <cstdlib>
 #include <cstdio>
 
-constexpr int ScreenWidth = 512;
-constexpr int ScreenHeight = 600;
+constexpr int ScreenWidth = 520;
+constexpr int ScreenHeight = 650;
 
 static const char* TemplateVersion = "Tetris";
 

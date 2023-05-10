@@ -53,13 +53,13 @@ private:
 	Shape::Rectangle extra{ 0 };
 
 	int frame{ 0 };
-	int size = 100;
+	int size = 90;
 
-	int one = static_cast<int>(size * 0.33);
-	int two = static_cast<int>(size * 0.66); 
+	int one = size / 3;
+	int two = one * 2; 
 	int three = size;
-	int four = static_cast<int>(size * 1.33);
-	int five = static_cast<int>(size * 1.66);
+	int four = one * 4;
+	int five = one * 5;
 
 	vec origin{ 0, size }; //bottom left of 3x3 grid
 	vec position{ origin };
