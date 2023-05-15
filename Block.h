@@ -39,6 +39,7 @@ public:
 	const int GetFrame() const;
 
 	void SetColor(const Block::Color color);
+	const Color GetColor() const;
 
 	int FramePlus();
 
@@ -52,7 +53,7 @@ private:
 	Shape::Rectangle core{ 0 };
 	Shape::Rectangle extra{ 0 };
 
-	int frame{ 0 };
+	int frame = 0;
 	int size = 90;
 
 	int one = size / 3;
@@ -62,5 +63,5 @@ private:
 	int five = one * 5;
 
 	vec origin{ 0, size }; //bottom left of 3x3 grid
-	vec position{ origin };
+	vec position{ 0 };
 };

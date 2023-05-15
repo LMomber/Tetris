@@ -1,4 +1,7 @@
 #include "game.h"
+#include <memory>
+#include <random>
+#include <format>
 #include <iostream>
 
 
@@ -18,11 +21,22 @@ namespace Tmpl8
 		case Initialize:
 		{
 			blockTimer.reset();
-			block.Collider();
-			block.SetPosition(startPosition);
+			elapsedSeconds = lastSecond = 0;
+
+			ChangeColor();
+			Block newBlock(blockColor);
+			blocks.push_back(newBlock);
+			blocks[iterator].Collider();
+
+			leftBorder = (ScreenWidth / 2) - (blocks[iterator].GetSizeOne() * 5);
+			rightBorder = (ScreenWidth / 2) + (blocks[iterator].GetSizeOne() * 5);
+			startPosition = { leftBorder + (blocks[iterator].GetSizeOne() * 3),
+					(blocks[iterator].GetCoreHeight() > blocks[iterator].GetExtraHeight() ? blocks[iterator].GetCoreHeight() : blocks[iterator].GetExtraHeight()) };
+			blocks[iterator].SetPosition(startPosition);
+
 			gameState = Playing;
+		break;
 		}
-			break;
 		case Playing:
 		{
 			blockTimer.tick();
@@ -31,214 +45,278 @@ namespace Tmpl8
 			//Move blocks downwards
 			if (elapsedSeconds > lastSecond)
 			{
-				block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
+				blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + static_cast<int>(blocks[iterator].GetSize() / 3) });
 				lastSecond = elapsedSeconds;
 			}
 
-			block.WallCollision(leftBorder, rightBorder, bottomBorder);
+			Update();
+
+			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder);
 			GridCollision();
 
 			screen->Clear(0);
-			drawBlock();
+			//Draw sprites
+			for (int i = 0; i <= iterator; i++)
+			{
+				DrawBlock(i);
+			}
 
-			//screen->Line(leftBorder, bottomBorder - (block.GetSize() / 3), rightBorder, bottomBorder - (block.GetSize()/3), 0xffffff);
-			screen->Line(leftBorder, bottomBorder, rightBorder, bottomBorder, 0xffffff);
-			screen->Line(leftBorder, 0, leftBorder, bottomBorder, 0xffffff);
-			screen->Line(rightBorder, 0, rightBorder, bottomBorder, 0xffffff);
+			//Draw borders
+			screen->Line(static_cast<float>(leftBorder), static_cast<float>(bottomBorder), static_cast<float>(rightBorder), static_cast<float>(bottomBorder), 0xffffff);
+			screen->Line(static_cast<float>(leftBorder), 0, static_cast<float>(leftBorder), static_cast<float>(bottomBorder), 0xffffff);
+			screen->Line(static_cast<float>(rightBorder), 0, static_cast<float>(rightBorder), static_cast<float>(bottomBorder), 0xffffff);
+		break;
 		}
-			break;
 		case NextBlock:
 		{
-			for (int i = 0; i < (block.GetCoreWidth() / block.GetSizeOne()); i++)
+			//Sets occupation bool for the core-blocks
+			for (int x = 0; x < (blocks[iterator].GetCoreWidth() / blocks[iterator].GetSizeOne()); x++)
 			{
-				for (int j = 0; j < (block.GetCoreHeight() / block.GetSize()); j++)
+				for (int y = 0; y < (blocks[iterator].GetCoreHeight() / blocks[iterator].GetSizeOne()); y++)
 				{
-					grid[i][j] = true;
+					//If inside the borders of the playing field
+					if ((xPosCore + x < grid.size()) && (yPosCore + y < grid[x].size())) grid[xPosCore + x][yPosCore + y] = true;
 				}
 			}
+
+			//Sets occupation bool for the extra-blocks
+			for (int x = 0; x < (blocks[iterator].GetExtraWidth() / blocks[iterator].GetSizeOne()); x++)
+			{
+				for (int y = 0; y < (blocks[iterator].GetExtraHeight() / blocks[iterator].GetSizeOne()); y++)
+				{
+					//If inside the borders of the playing field
+					if ((xPosExtra + x < grid.size()) && (yPosExtra + y < grid[x].size())) grid[xPosExtra + x][yPosExtra + y] = true;
+				}
+			}
+
+			//std::cout << xPos << "    " << yPos << std::endl;
+			//std::cout << blocks[iterator].GetCoreHeight() / blocks[iterator].GetSize() << std::endl;
+
+			for(int j = 0; j < 5; j++)
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					std::cout << std::format("{:^7}|", grid[i][4-j]);
+				}
+
+				std::cout << std::endl;
+			}
+
+			iterator++;
+			gameState = Initialize;
+		break;
 		}
-			break;
 		}
 	}
-	
+
 	void Game::GridCollision()
 	{
-		int xPos = (x1 - leftBorder) / block.GetSizeOne(); 
-		int yPos; 
-
 		//Calculate the Y-position in the grid
-		if (y1 - bottomBorder == 0) yPos = 0;
-		else yPos = abs(y1 - bottomBorder) / block.GetSizeOne(); 
+		if (y1 - bottomBorder == 0) yPosCore = 0;
+		else yPosCore = abs(y1 - bottomBorder) / blocks[iterator].GetSizeOne();
 
 		//Check if the grid left of the xPos is true
-		if (xPos > 0 && grid[xPos - 1][yPos] == true) allowLeft = false; 
+		if (yPosCore < 20 && xPosCore > 0 && grid[xPosCore - 1][yPosCore] == true) allowLeft = false;
 		else allowLeft = true;
 
 		//Check if the grid right of the xPos is true
-		if ((xPos < 9 && xPos >= 0) && grid[xPos + 1][yPos] == true) allowRight = false;
+		if (yPosCore < 20 && (xPosCore < 9 && xPosCore >= 0) && grid[xPosCore + 1][yPosCore] == true) allowRight = false;
 		else allowRight = true;
 
 		//Check if the grid under the yPos is true. If so, prevent movement downwards, nextBlock == true;
-		if (yPos > 0 && yPos < 19)
+		if ((xPosCore >= 0 && yPosCore > 0 && yPosCore < 19) && grid[xPosCore][yPosCore - 1] == true)
 		{
-			if (grid[xPos][yPos - 1] == true || block.onGround(bottomBorder))
+			if (!timeStampTaken)
 			{
-				if (!timeStampTaken)
-				{
-					onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
-					timeStampTaken = true;
-				}
+				onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+				timeStampTaken = true;
+			}
 
-				if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 0.4f)
-					gameState = NextBlock;
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 0.4f)
+			{
+				timeStampTaken = false;
+				gameState = NextBlock;
+			}
 
-				block.WallCollision(leftBorder, rightBorder, bottomBorder - (yPos * block.GetSizeOne()));
+			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder - (yPosCore * blocks[iterator].GetSizeOne()));
+		}
+		else if (yPosCore == 0)
+		{
+			if (!timeStampTaken)
+			{
+				onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+				timeStampTaken = true;
+			}
+
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 0.4f)
+			{
+				timeStampTaken = false;
+				gameState = NextBlock;
 			}
 		}
+	}
+
+	void Game::ChangeColor()
+	{
+		std::mt19937 rng(std::random_device{}());
+		std::uniform_int_distribution<int> dist(0, 6);
+
+		int color = dist(rng);
+
+		switch (color) {
+		case 0:
+			blockColor = Block::Blue;
+			break;
+		case 1:
+			blockColor = Block::Green;
+			break;
+		case 2:
+			blockColor = Block::LightBlue;
+			break;
+		case 3:
+			blockColor = Block::Orange;
+			break;
+		case 4:
+			blockColor = Block::Purple;
+			break;
+		case 5:
+			blockColor = Block::Red;
+			break;
+		case 6:
+			blockColor = Block::Yellow;
+			break;
+		}
+	}
+
+	void Game::Update()
+	{
+		x1 = blocks[iterator].GetPosition().x + blocks[iterator].GetCorePos().x;  
+		y1 = blocks[iterator].GetPosition().y + blocks[iterator].GetCorePos().y;  
+
+		xPosCore = (x1 - leftBorder) / blocks[iterator].GetSizeOne();  
+
+		x3 = blocks[iterator].GetPosition().x + blocks[iterator].GetExtraPos().x; 
+		y3 = blocks[iterator].GetPosition().y + blocks[iterator].GetExtraPos().y;
+
+		xPosExtra = (x3 - leftBorder) / blocks[iterator].GetSizeOne();
 	}
 
 	void Game::KeyDown(int key)
 	{
-		if (nextBlock)
-		{
-
-		}
-		else
-		{
-			switch (key) {
-			case SDL_SCANCODE_W:
-			case SDL_SCANCODE_UP:
-				if (allowUp)
-				{
-					block.FramePlus();
-
-					switch (blockColor) {
-					case Block::Blue:
-						blue.SetFrame(block.GetFrame());
-						break;
-					case Block::Green:
-						green.SetFrame(block.GetFrame());
-						break;
-					case Block::Red:
-						red.SetFrame(block.GetFrame());
-						break;
-					case Block::Orange:
-						orange.SetFrame(block.GetFrame());
-						break;
-					case Block::Yellow:
-						yellow.SetFrame(block.GetFrame());
-						break;
-					case Block::Purple:
-						purple.SetFrame(block.GetFrame());
-						break;
-					case Block::LightBlue:
-						lightBlue.SetFrame(block.GetFrame());
-						break;
-					}
-
-					block.Collider();
-				}
-				break;
-			case SDL_SCANCODE_S:
-			case SDL_SCANCODE_DOWN:
-				if (allowDown) block.SetPosition({ block.GetPosition().x, block.GetPosition().y + static_cast<int>(block.GetSize() / 3) });
-				break;
-			case SDL_SCANCODE_A:
-			case SDL_SCANCODE_LEFT:
-				if (allowLeft) block.SetPosition({ block.GetPosition().x - static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
-				break;
-			case SDL_SCANCODE_D:
-			case SDL_SCANCODE_RIGHT:
-				if (allowRight) block.SetPosition({ block.GetPosition().x + static_cast<int>(block.GetSize() / 3), block.GetPosition().y });
-				break;
+		switch (key) {
+		case SDL_SCANCODE_W:
+		case SDL_SCANCODE_UP:
+			if (allowUp)
+			{
+				blocks[iterator].FramePlus();
+				blocks[iterator].Collider();
 			}
+			break;
+		case SDL_SCANCODE_S:
+		case SDL_SCANCODE_DOWN:
+			if (allowDown) blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + static_cast<int>(blocks[iterator].GetSize() / 3) });
+			break;
+		case SDL_SCANCODE_A:
+		case SDL_SCANCODE_LEFT:
+			if (allowLeft) blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x - static_cast<int>(blocks[iterator].GetSize() / 3), blocks[iterator].GetPosition().y });
+			break;
+		case SDL_SCANCODE_D:
+		case SDL_SCANCODE_RIGHT:
+			if (allowRight) blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x + static_cast<int>(blocks[iterator].GetSize() / 3), blocks[iterator].GetPosition().y });
+			break;
 		}
 	}
 
 #ifdef _DEBUG
-	void Game::drawBlock()
+	void Game::DrawBlock(int i)
 	{
-		switch (blockColor) {
+		switch (blocks[i].GetColor()) {
 		case Block::Blue:
-			blue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			blue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Green:
-			green.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			green->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Red:
-			red.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSizeOfRed(), block.GetSizeOfRed(), screen);
+			red->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfRed(), blocks[i].GetSizeOfRed(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Orange:
-			orange.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			orange->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Yellow:
-			yellow.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			yellow->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Purple:
-			purple.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSizeOfPurple(), block.GetSizeOfPurple(), screen);
+			purple->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfPurple(), blocks[i].GetSizeOfPurple(), screen, blocks[i].GetFrame());
 			break;
 		case Block::LightBlue:
-			lightBlue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			lightBlue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		}
 
+		/***************************************
+			
+			Code for drawing box-collisions
+		
+		****************************************/
+
 		//Core x1
-		x1 = block.GetPosition().x + block.GetCorePos().x;
-		//screen->Line(x1, 0, x1, ScreenHeight, 0x00ff00);
+		x11 = blocks[i].GetPosition().x + blocks[i].GetCorePos().x;
+		//screen->Line(x11, 0, x11, ScreenHeight, 0x00ff00);
 		//Core x2
-		x2 = block.GetPosition().x + block.GetCorePos().x + block.GetCoreWidth();
-		//screen->Line(x2, 0, x2, ScreenHeight, 0x00ff00);
+		x22 = blocks[i].GetPosition().x + blocks[i].GetCorePos().x + blocks[i].GetCoreWidth();
+		//screen->Line(x22, 0, x22, ScreenHeight, 0x00ff00);
 		//Core y1
-		y1 = block.GetPosition().y + block.GetCorePos().y;
-		//screen->Line(0, y1, ScreenWidth, y1, 0x00ff00);
+		y11 = blocks[i].GetPosition().y + blocks[i].GetCorePos().y;
+		//screen->Line(0, y11, ScreenWidth, y11, 0x00ff00);
 		//Core y2
-		y2 = block.GetPosition().y + block.GetCorePos().y - block.GetCoreHeight();
-		//screen->Line(0, y2, ScreenWidth, y2, 0x00ff00);
+		y22 = blocks[i].GetPosition().y + blocks[i].GetCorePos().y - blocks[i].GetCoreHeight();
+		//screen->Line(0, y22, ScreenWidth, y22, 0x00ff00);
 
 		//Core Box
-		screen->Box(x1, y1, x2, y2, 0x00ff00);
+		screen->Box(x11, y11, x22, y22, 0x00ff00);
 
 		//Extra x1
-		x3 = block.GetPosition().x + block.GetExtraPos().x;
-		//screen->Line(x3, 0, x3, ScreenHeight, 0x00ff00);
+		x33 = blocks[i].GetPosition().x + blocks[i].GetExtraPos().x;
+		//screen->Line(x33, 0, x33, ScreenHeight, 0x00ff00);
 		//Extra x2
-		x4 = block.GetPosition().x + block.GetExtraPos().x + block.GetExtraWidth();
-		//screen->Line(x4, 0, x4, ScreenHeight, 0x00ff00);
+		x44 = blocks[i].GetPosition().x + blocks[i].GetExtraPos().x + blocks[i].GetExtraWidth();
+		//screen->Line(x4, 0, x44, ScreenHeight, 0x00ff00);
 		//Extra y1
-		y3 = block.GetPosition().y + block.GetExtraPos().y;
-		//screen->Line(0, y3, ScreenWidth, y3, 0x00ff00);
+		y33 = blocks[i].GetPosition().y + blocks[i].GetExtraPos().y;
+		//screen->Line(0, y33, ScreenWidth, y33, 0x00ff00);
 		//Extra y2
-		y4 = block.GetPosition().y + block.GetExtraPos().y - block.GetExtraHeight();
-		//screen->Line(0, y4, ScreenWidth, y4, 0x00ff00);
+		y44 = blocks[i].GetPosition().y + blocks[i].GetExtraPos().y - blocks[i].GetExtraHeight();
+		//screen->Line(0, y44, ScreenWidth, y44, 0x00ff00);
 
 		//Extra Box
-		screen->Box(x3, y3, x4, y4, 0xff0000);
+		screen->Box(x33, y33, x44, y44, 0xff0000);
 	}
 
 #else
-	void Game::drawBlock()
+	void Game::drawBlock(int i)
 	{
-		switch (blockColor) {
+		switch (blocks[i].GetColor()) {
 		case Block::Blue:
-			blue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			blue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Green:
-			green.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			green->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Red:
-			red.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSizeOfRed(), block.GetSizeOfRed(), screen);
+			red->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfRed(), blocks[i].GetSizeOfRed(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Orange:
-			orange.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			orange->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Yellow:
-			yellow.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			yellow->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		case Block::Purple:
-			purple.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSizeOfPurple(), block.GetSizeOfPurple(), screen);
+			purple->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfPurple(), blocks[i].GetSizeOfPurple(), screen, blocks[i].GetFrame());
 			break;
 		case Block::LightBlue:
-			lightBlue.DrawScaled(block.GetPosition().x, block.GetPosition().y, block.GetSize(), block.GetSize(), screen);
+			lightBlue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
 			break;
 		}
 	}

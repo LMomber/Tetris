@@ -3,7 +3,8 @@
 
 Block::Block(Color color): 
 	color{color}
-{}
+{
+}
 
 Block::~Block()
 {}
@@ -76,6 +77,11 @@ const int Block::GetFrame() const
 void Block::SetColor(const Block::Color color)
 {
 	this->color = color;
+}
+
+const Block::Color Block::GetColor() const
+{
+	return color;
 }
 
 int Block::FramePlus()

@@ -29,27 +29,40 @@ public:
 	void MouseMove(int x, int y) { mouseX = x, mouseY = y; }
 	void KeyUp(int key = 0) {/*Up for implementation*/ }
 	void KeyDown(int key = 0);
-	void drawBlock();
+	void DrawBlock(int i);
 	void GridCollision();
+	void ChangeColor();
+	void Update();
+
 private:
 	Surface* screen;
+	Surface* blue_S = new Surface("assets/blue.png");
+	Surface* green_S = new Surface("assets/green.png");
+	Surface* lightBlue_S = new Surface("assets/lightBlue.png");
+	Surface* orange_S = new Surface("assets/orange.png");
+	Surface* yellow_S = new Surface("assets/yellow.png");
+	Surface* purple_S = new Surface("assets/purple.png");
+	Surface* red_S = new Surface("assets/red.png");
 
 	SDL_Event event;
 
 	Block::Color blockColor = Block::Purple;
-	Block block{ blockColor };
-
-	GameState gameState{ Initialize };
 
 	std::array<std::array<bool, 20>, 10> grid = { false };
 
-	Sprite blue{ new Surface("assets/blue.png"), 4 };
-	Sprite green{ new Surface("assets/green.png"), 4 };
-	Sprite lightBlue{ new Surface("assets/lightblue.png"), 4 };
-	Sprite orange{ new Surface("assets/orange.png"), 4 };
-	Sprite yellow{ new Surface("assets/yellow.png"), 4 };
-	Sprite purple{ new Surface("assets/purple.png"), 4 };
-	Sprite red{ new Surface("assets/red.png"), 1 };
+	std::vector<Block> blocks;
+	std::vector<Sprite> sprites;
+	int iterator{ 0 };
+
+	GameState gameState{ Initialize };
+
+	Sprite* blue = new Sprite(blue_S, 4);
+	Sprite* green = new Sprite(green_S, 4);
+	Sprite* lightBlue = new Sprite(lightBlue_S, 4); 
+	Sprite* orange = new Sprite(orange_S, 4); 
+	Sprite* yellow = new Sprite(yellow_S, 4);
+	Sprite* purple = new Sprite(purple_S, 4);
+	Sprite* red = new Sprite(red_S, 1);
 
 	Graphics::Timer blockTimer;
 
@@ -65,18 +78,26 @@ private:
 	bool allowUp = true, allowDown = true, allowLeft = true, allowRight = true; 
 
 	int bottomBorder = ScreenHeight - 50;
-	int leftBorder = (ScreenWidth / 2) - (block.GetSizeOne() * 5);
-	int rightBorder = (ScreenWidth / 2) + (block.GetSizeOne() * 5);
+	int leftBorder;
+	int rightBorder;
 
 	int x1, x2, y1, y2; //Coords Core
 	int x3, x4, y3, y4; //Coords Extra
+
+	int x11, x22, y11, y22; //Coords Core
+	int x33, x44, y33, y44; //Coords Extra
+
+	int xPosCore;
+	int yPosCore;
+
+	int xPosExtra;
+	int yPosExtra;
 
 	float onGroundTimeStamp{ 0 };
 	bool timeStampTaken{ false };
 	bool nextBlock{ false };
 
-	vec startPosition = { leftBorder + (block.GetSizeOne() * 3), 
-		(block.GetCoreHeight() > block.GetExtraHeight() ? block.GetCoreHeight() : block.GetExtraHeight())};
+	vec startPosition;
 };
 
 }; // namespace Tmpl8
