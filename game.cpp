@@ -47,6 +47,28 @@ namespace Tmpl8
 			{
 				blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + static_cast<int>(blocks[iterator].GetSize() / 3) });
 				lastSecond = elapsedSeconds;
+
+#ifdef _DEBUG
+				for (int e = 0; e < 20; e++)
+				{
+					std::cout << " " << std::endl;
+				}
+
+				for (int j = 0; j < 19; j++)
+				{
+					for (int i = 0; i < 10; i++)
+					{
+
+						if (19-j == yPosCore && i == xPosCore)
+						{
+							std::cout << std::format(" TRUE  |");
+						}
+						else std::cout << std::format("{:^7}|", grid[i][19-j]);
+					}
+
+					std::cout << std::endl;
+				}
+#endif
 			}
 
 			Update();
@@ -90,7 +112,7 @@ namespace Tmpl8
 			}
 
 #ifdef _DEBUG
-			for (int e = 0; e < 20; e++)
+			/*for (int e = 0; e < 20; e++)
 			{
 				std::cout << " " << std::endl;
 			}
@@ -103,7 +125,7 @@ namespace Tmpl8
 				}
 
 				std::cout << std::endl;
-			}
+			}*/
 #endif
 
 			iterator++;
@@ -130,7 +152,7 @@ namespace Tmpl8
 		else allowRight = true;
 
 		//Check if the grid under Core is true. If so, prevent movement downwards, nextBlock == true;
-		if ((xPosCore >= 0 && yPosCore > 0 && yPosCore < 19) && grid[xPosCore][yPosCore - 1] == true)
+		if ((xPosCore >= 0 && yPosCore > 0 && yPosCore < 19) && grid[xPosCore][yPosCore] == true)
 		{
 			if (!timeStampTaken)
 			{
@@ -147,7 +169,7 @@ namespace Tmpl8
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder - (yPosCore * blocks[iterator].GetSizeOne()));
 		}
 		//Check if the grid under Extra is true. If so, prevent movement downwards, nextBlock == true;
-		else if ((xPosExtra >= 0 && yPosExtra > 0 && yPosExtra < 19) && grid[xPosExtra][yPosExtra - 1] == true)
+		else if ((xPosExtra >= 0 && yPosExtra > 0 && yPosExtra < 19) && grid[xPosExtra][yPosExtra + 1] == true)
 		{
 			if (!timeStampTaken)
 			{
