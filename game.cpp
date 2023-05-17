@@ -152,7 +152,7 @@ namespace Tmpl8
 		else allowRight = true;
 
 		//Check if the grid under Core is true. If so, prevent movement downwards, nextBlock == true;
-		if ((xPosCore >= 0 && yPosCore > 0 && yPosCore < 19) && grid[xPosCore][yPosCore] == true)
+		if ((xPosCore >= 0 && xPosCore < 10 && yPosCore > 0 && yPosCore < 19) && grid[xPosCore][yPosCore] == true)
 		{
 			if (!timeStampTaken)
 			{
@@ -169,7 +169,7 @@ namespace Tmpl8
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder - (yPosCore * blocks[iterator].GetSizeOne()));
 		}
 		//Check if the grid under Extra is true. If so, prevent movement downwards, nextBlock == true;
-		else if ((xPosExtra >= 0 && yPosExtra > 0 && yPosExtra < 19) && grid[xPosExtra][yPosExtra + 1] == true)
+		else if ((xPosExtra >= 0 && xPosExtra < 10 && yPosExtra > 0 && yPosExtra < 19) && grid[xPosExtra][yPosExtra] == true)
 		{
 			if (!timeStampTaken)
 			{
