@@ -69,6 +69,8 @@ private:
 	int elapsedSeconds{ 0 };
 	int lastSecond{ 0 };
 
+	float waitTime = 0.5f;
+
 	//Variables for registering mouse clicks
 	int mouseX, mouseY;
 	int mousePressed;
@@ -87,11 +89,11 @@ private:
 	int x11, x22, y11, y22; //Coords Core
 	int x33, x44, y33, y44; //Coords Extra
 
-	int xPosCore;
-	int yPosCore;
+	int xPosCore = 1;
+	int yPosCore = 1;
 
-	int xPosExtra;
-	int yPosExtra;
+	int xPosExtra = 1;
+	int yPosExtra = 1;
 
 	float onGroundTimeStamp{ 0 };
 	bool timeStampTaken{ false };

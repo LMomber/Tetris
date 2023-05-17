@@ -75,7 +75,7 @@ namespace Tmpl8
 				for (int y = 0; y < (blocks[iterator].GetCoreHeight() / blocks[iterator].GetSizeOne()); y++)
 				{
 					//If inside the borders of the playing field
-					if ((xPosCore + x < grid.size()) && (yPosCore + y < grid[x].size())) grid[xPosCore + x][yPosCore + y] = true;
+					if ((xPosCore + x < grid.size()) && (yPosCore + y < grid[x].size())) grid[xPosCore + x][yPosCore + y + 1] = true;
 				}
 			}
 
@@ -85,22 +85,26 @@ namespace Tmpl8
 				for (int y = 0; y < (blocks[iterator].GetExtraHeight() / blocks[iterator].GetSizeOne()); y++)
 				{
 					//If inside the borders of the playing field
-					if ((xPosExtra + x < grid.size()) && (yPosExtra + y < grid[x].size())) grid[xPosExtra + x][yPosExtra + y] = true;
+					if ((xPosExtra + x < grid.size()) && (yPosExtra + y < grid[x].size())) grid[xPosExtra + x][yPosExtra + y + 1] = true;
 				}
 			}
 
-			//std::cout << xPos << "    " << yPos << std::endl;
-			//std::cout << blocks[iterator].GetCoreHeight() / blocks[iterator].GetSize() << std::endl;
+#ifdef _DEBUG
+			for (int e = 0; e < 20; e++)
+			{
+				std::cout << " " << std::endl;
+			}
 
-			for(int j = 0; j < 5; j++)
+			for(int j = 0; j < 19; j++)
 			{
 				for (int i = 0; i < 10; i++)
 				{
-					std::cout << std::format("{:^7}|", grid[i][4-j]);
+					std::cout << std::format("{:^7}|", grid[i][19-j]);
 				}
 
 				std::cout << std::endl;
 			}
+#endif
 
 			iterator++;
 			gameState = Initialize;
@@ -112,18 +116,20 @@ namespace Tmpl8
 	void Game::GridCollision()
 	{
 		//Calculate the Y-position in the grid
-		if (y1 - bottomBorder == 0) yPosCore = 0;
-		else yPosCore = abs(y1 - bottomBorder) / blocks[iterator].GetSizeOne();
+		yPosCore = abs(y1 - bottomBorder) / blocks[iterator].GetSizeOne();
+		yPosExtra = abs(y3 - bottomBorder) / blocks[iterator].GetSizeOne();
 
 		//Check if the grid left of the xPos is true
 		if (yPosCore < 20 && xPosCore > 0 && grid[xPosCore - 1][yPosCore] == true) allowLeft = false;
+		else if (yPosExtra < 20 && xPosExtra > 0 && grid[xPosExtra - 1][yPosExtra] == true) allowLeft = false;
 		else allowLeft = true;
 
 		//Check if the grid right of the xPos is true
 		if (yPosCore < 20 && (xPosCore < 9 && xPosCore >= 0) && grid[xPosCore + 1][yPosCore] == true) allowRight = false;
+		else if (yPosExtra < 20 && (xPosExtra < 9 && xPosExtra >= 0) && grid[xPosExtra + 1][yPosExtra] == true) allowRight = false;
 		else allowRight = true;
 
-		//Check if the grid under the yPos is true. If so, prevent movement downwards, nextBlock == true;
+		//Check if the grid under Core is true. If so, prevent movement downwards, nextBlock == true;
 		if ((xPosCore >= 0 && yPosCore > 0 && yPosCore < 19) && grid[xPosCore][yPosCore - 1] == true)
 		{
 			if (!timeStampTaken)
@@ -132,7 +138,7 @@ namespace Tmpl8
 				timeStampTaken = true;
 			}
 
-			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 0.4f)
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
 			{
 				timeStampTaken = false;
 				gameState = NextBlock;
@@ -140,7 +146,8 @@ namespace Tmpl8
 
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder - (yPosCore * blocks[iterator].GetSizeOne()));
 		}
-		else if (yPosCore == 0)
+		//Check if the grid under Extra is true. If so, prevent movement downwards, nextBlock == true;
+		else if ((xPosExtra >= 0 && yPosExtra > 0 && yPosExtra < 19) && grid[xPosExtra][yPosExtra - 1] == true)
 		{
 			if (!timeStampTaken)
 			{
@@ -148,7 +155,23 @@ namespace Tmpl8
 				timeStampTaken = true;
 			}
 
-			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= 0.4f)
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+			{
+				timeStampTaken = false;
+				gameState = NextBlock;
+			}
+
+			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder - (yPosExtra * blocks[iterator].GetSizeOne()));
+		}
+		else if (yPosCore == 0 || yPosExtra == 0)
+		{
+			if (!timeStampTaken)
+			{
+				onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+				timeStampTaken = true;
+			}
+
+			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
 			{
 				timeStampTaken = false;
 				gameState = NextBlock;
@@ -227,7 +250,6 @@ namespace Tmpl8
 		}
 	}
 
-#ifdef _DEBUG
 	void Game::DrawBlock(int i)
 	{
 		switch (blocks[i].GetColor()) {
@@ -254,6 +276,7 @@ namespace Tmpl8
 			break;
 		}
 
+#ifdef _DEBUG
 		/***************************************
 			
 			Code for drawing box-collisions
@@ -291,34 +314,6 @@ namespace Tmpl8
 
 		//Extra Box
 		screen->Box(x33, y33, x44, y44, 0xff0000);
-	}
-
-#else
-	void Game::drawBlock(int i)
-	{
-		switch (blocks[i].GetColor()) {
-		case Block::Blue:
-			blue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
-			break;
-		case Block::Green:
-			green->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
-			break;
-		case Block::Red:
-			red->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfRed(), blocks[i].GetSizeOfRed(), screen, blocks[i].GetFrame());
-			break;
-		case Block::Orange:
-			orange->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
-			break;
-		case Block::Yellow:
-			yellow->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
-			break;
-		case Block::Purple:
-			purple->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfPurple(), blocks[i].GetSizeOfPurple(), screen, blocks[i].GetFrame());
-			break;
-		case Block::LightBlue:
-			lightBlue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
-			break;
-		}
-	}
 #endif
+	}
 };
