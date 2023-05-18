@@ -57,6 +57,7 @@ namespace Tmpl8
 			GridCollision();
 
 			screen->Clear(0);
+			DrawPlayingField();
 
 			//Draw sprites
 			DrawBlock(iterator);
@@ -65,8 +66,6 @@ namespace Tmpl8
 				DrawBlock(i);
 				//DrawOldBlock(i);
 			}
-
-			DrawPlayingField();
 		break;
 		}
 		case NextBlock:
@@ -203,6 +202,17 @@ namespace Tmpl8
 
 	void Game::DrawPlayingField()
 	{
+		for (int i = 1; i < 10; i++)
+		{
+			int x = leftBorder + blocks[0].GetSizeOne() * i;
+			screen->Line(x, 0, x, bottomBorder, 0x505050);
+		}
+
+		for (int j = 1; j < 20; j++)
+		{
+			int y = blocks[0].GetSizeOne() * j;
+			screen->Line(leftBorder, y, rightBorder, y, 0x505050);
+		}
 		//Draw borders
 		screen->Line(static_cast<float>(leftBorder), static_cast<float>(bottomBorder), static_cast<float>(rightBorder), static_cast<float>(bottomBorder), 0xffffff);
 		screen->Line(static_cast<float>(leftBorder), 0, static_cast<float>(leftBorder), static_cast<float>(bottomBorder), 0xffffff);
