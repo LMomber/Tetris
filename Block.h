@@ -41,6 +41,9 @@ public:
 	void SetColor(const Block::Color color);
 	const Color GetColor() const;
 
+	void SetGridPos(vec gridPos);
+	const vec GetGridPos() const;
+
 	int FramePlus();
 
 	void Collider();
@@ -64,4 +67,6 @@ private:
 
 	vec origin{ 0, size }; //bottom left of 3x3 grid
 	vec position{ 0 };
+
+	vec gridPos{};
 };

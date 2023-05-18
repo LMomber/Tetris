@@ -28,11 +28,22 @@ public:
 	void MouseDown( int button ) { mousePressed = button; if (mousePressed) mouseReleased = 0; }
 	void MouseMove(int x, int y) { mouseX = x, mouseY = y; }
 	void KeyUp(int key = 0) {/*Up for implementation*/ }
-	void KeyDown(int key = 0);
-	void DrawBlock(int i);
-	void GridCollision();
-	void ChangeColor();
+
+	void StartPosition();
 	void Update();
+
+	void DrawBlock(int i);
+	void DrawOldBlock(int i);
+	void DrawPlayingField();
+
+	void GridCollision();
+	void AddToGrid();
+
+	void FixedPosition(int xPos, int yPos);
+	void ChangeColor();
+	void KeyDown(int key = 0);
+
+	void ShowTestGrid();
 
 private:
 	Surface* screen;

@@ -84,6 +84,16 @@ const Block::Color Block::GetColor() const
 	return color;
 }
 
+void Block::SetGridPos(vec gridPos)
+{
+	this->gridPos = gridPos;
+}
+
+const vec Block::GetGridPos() const
+{
+	return gridPos;
+}
+
 int Block::FramePlus()
 {
 	if (color == Red) frame = 0;
