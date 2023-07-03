@@ -39,6 +39,8 @@ public:
 	void GridCollision();
 	void AddToGrid();
 
+	bool InBounds(int xPos, int yPos);
+
 	void FixedPosition(int xPos, int yPos);
 	void ChangeColor();
 	void KeyDown(int key = 0);
@@ -54,10 +56,12 @@ private:
 	Surface* yellow_S = new Surface("assets/yellow.png");
 	Surface* purple_S = new Surface("assets/purple.png");
 	Surface* red_S = new Surface("assets/red.png");
+	Surface* colors_S = new Surface("assets/colors.png");
 
 	SDL_Event event;
 
 	Block::Color blockColor = Block::Purple;
+	Block::Color testColor = Block::All;
 
 	std::array<std::array<bool, 20>, 10> grid = { false };
 
@@ -74,6 +78,7 @@ private:
 	Sprite* yellow = new Sprite(yellow_S, 4);
 	Sprite* purple = new Sprite(purple_S, 4);
 	Sprite* red = new Sprite(red_S, 1);
+	Sprite* colors = new Sprite(colors_S, 7);
 
 	Graphics::Timer blockTimer;
 
@@ -94,8 +99,8 @@ private:
 	int leftBorder;
 	int rightBorder;
 
-	int x1, x2, y1, y2; //Coords Core
-	int x3, x4, y3, y4; //Coords Extra
+	int core_x1, core_x2, core_y1, core_y2; //Coords Core
+	int extra_x1, extra_x2, extra_y1, extra_y2; //Coords Extra
 
 	int x11, x22, y11, y22; //Coords Core
 	int x33, x44, y33, y44; //Coords Extra

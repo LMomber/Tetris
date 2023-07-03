@@ -13,7 +13,8 @@ public:
 		Orange,
 		Yellow,
 		Purple,
-		LightBlue
+		LightBlue,
+		All
 	};
 
 	Block(Color color);
