@@ -33,7 +33,7 @@ public:
 	void Update();
 
 	void DrawBlock(int i);
-	void DrawOldBlock(int i);
+	void DrawOldBlock();
 	void DrawPlayingField();
 
 	void GridCollision();
@@ -64,6 +64,7 @@ private:
 	Block::Color testColor = Block::All;
 
 	std::array<std::array<bool, 20>, 10> grid = { false };
+	std::array<std::array<int, 20>, 10> gridColors = { 0 };
 
 	std::vector<Block> blocks;
 	std::vector<Sprite> sprites;

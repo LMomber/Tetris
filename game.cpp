@@ -24,8 +24,8 @@ namespace Tmpl8
 			elapsedSeconds = lastSecond = 0;
 
 			ChangeColor();
-			Block newBlock(testColor);
-			//Block newBlock(blockColor);
+			//Block newBlock(testColor);
+			Block newBlock(blockColor);
 			blocks.push_back(newBlock);
 			blocks[iterator].Collider();
 
@@ -65,11 +65,8 @@ namespace Tmpl8
 
 			//Draw sprites
 			DrawBlock(iterator);
-			for (int i = 0; i < iterator; i++)
-			{
-				DrawBlock(i);
-				//DrawOldBlock(i);
-			}
+			DrawOldBlock();
+
 		break;
 		}
 		case NextBlock:
@@ -175,35 +172,36 @@ namespace Tmpl8
 #endif
 	}
 
-	void Game::DrawOldBlock(int i)
+	void Game::DrawOldBlock()
 	{
-		int x = leftBorder + blocks[i].GetSizeOne() * blocks[i].GetGridPos().x;
-		int y = bottomBorder - blocks[i].GetSizeOne() * blocks[i].GetGridPos().y - blocks[i].GetSize();;
-		int size = blocks[i].GetSize();
-		int frame = blocks[i].GetFrame();
-
-		switch (blocks[i].GetColor()) {
-		case Block::Blue:
-			blue->DrawScaled(x, y, size, size, screen, frame);
-			break;
-		case Block::Green:
-			green->DrawScaled(x, y, size, size, screen, frame);
-			break;
-		case Block::Red:
-			red->DrawScaled(x, y, blocks[i].GetSizeOfRed(), blocks[i].GetSizeOfRed(), screen, frame);
-			break;
-		case Block::Orange:
-			orange->DrawScaled(x, y, size, size, screen, frame);
-			break;
-		case Block::Yellow:
-			yellow->DrawScaled(x, y, size, size, screen, frame);
-			break;
-		case Block::Purple:
-			purple->DrawScaled(x, y, blocks[i].GetSizeOfPurple(), blocks[i].GetSizeOfPurple(), screen, frame);
-			break;
-		case Block::LightBlue:
-			lightBlue->DrawScaled(x, y, size, size, screen, frame);
-			break;
+		for (int j = 0; j < 20; j++)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				switch (gridColors[i][j]) {
+				case 1: 
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 0); 
+					break;
+				case 2:
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 1);
+					break;
+				case 3:
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 2);
+					break;
+				case 4:
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 3);
+					break;
+				case 5:
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 4);
+					break;
+				case 6:
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 5);
+					break;
+				case 7:
+					colors->DrawScaled(i * blocks[iterator].GetSizeOne() + leftBorder, bottomBorder - j * blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, 6);
+					break;
+				}
+			}
 		}
 	}
 
@@ -275,22 +273,77 @@ namespace Tmpl8
 	void Game::AddToGrid()
 	{
 		//Sets occupation bool for the core-blocks
-		for (int x = 0; x < (blocks[iterator].GetCoreWidth() / blocks[iterator].GetSizeOne()); x++)
+		for (long long x = 0; x < (blocks[iterator].GetCoreWidth() / blocks[iterator].GetSizeOne()); x++)
 		{
-			for (int y = 0; y < (blocks[iterator].GetCoreHeight() / blocks[iterator].GetSizeOne()); y++)
+			for (long long y = 0; y < (blocks[iterator].GetCoreHeight() / blocks[iterator].GetSizeOne()); y++)
 			{
 				//If inside the borders of the playing field
-				if ((xPosCore + x < grid.size()) && (yPosCore + y < grid[x].size())) grid[xPosCore + x][yPosCore + y + 1] = true;
+				if ((xPosCore + x < grid.size()) && (yPosCore + y < grid[x].size())) 
+				{
+					grid[xPosCore + x][yPosCore + y + 1] = true;
+
+					switch (blockColor) {
+					case Block::Blue:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 1;
+						break;
+					case Block::Green:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 2;
+						break;
+					case Block::LightBlue:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 3;
+						break;
+					case Block::Orange:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 4;
+						break;
+					case Block::Purple:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 5;
+						break;
+					case Block::Red:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 6;
+						break;
+					case Block::Yellow:
+						gridColors[xPosCore + x][yPosCore + y + 1] = 7;
+						break;
+					}
+				}
 			}
 		}
 
 		//Sets occupation bool for the extra-blocks
-		for (int x = 0; x < (blocks[iterator].GetExtraWidth() / blocks[iterator].GetSizeOne()); x++)
+		for (long long x = 0; x < (blocks[iterator].GetExtraWidth() / blocks[iterator].GetSizeOne()); x++) 
 		{
-			for (int y = 0; y < (blocks[iterator].GetExtraHeight() / blocks[iterator].GetSizeOne()); y++)
+			for (long long y = 0; y < (blocks[iterator].GetExtraHeight() / blocks[iterator].GetSizeOne()); y++) 
 			{
 				//If inside the borders of the playing field
-				if ((xPosExtra + x < grid.size()) && (yPosExtra + y < grid[x].size())) grid[xPosExtra + x][yPosExtra + y + 1] = true;
+				if ((xPosExtra + x < grid.size()) && (yPosExtra + y < grid[x].size())) 
+				{
+					grid[xPosExtra + x][yPosExtra + y + 1] = true;
+
+					switch (blockColor) {
+					case Block::Blue:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 1;
+						break;
+					case Block::Green:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 2;
+						break;
+					case Block::LightBlue:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 3;
+						break;
+					case Block::Orange:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 4;
+						break;
+					case Block::Purple:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 5;
+						break;
+					case Block::Red:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 6;
+						break;
+					case Block::Yellow:
+						gridColors[xPosExtra + x][yPosExtra + y + 1] = 7;
+						break;
+					}
+
+				}
 			}
 		}
 	}
