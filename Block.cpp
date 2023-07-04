@@ -382,7 +382,7 @@ void Block::Collider()
 			core.width = four;
 			core.height = one;
 			core.pos.x = origin.x;
-			core.pos.y = static_cast<int>(origin.y * 1.66) - two;
+			core.pos.y = static_cast<int>(origin.y * 1.66) - four;
 
 			extra.width = 0;
 			extra.height = 0;
@@ -392,7 +392,7 @@ void Block::Collider()
 			core.width = one;
 			core.height = four;
 			core.pos.x += two;
-			core.pos.y += two;
+			core.pos.y += three;
 
 			extra.pos = core.pos;
 			break;
@@ -400,7 +400,7 @@ void Block::Collider()
 			core.width = four;
 			core.height = one;
 			core.pos.x -= two;
-			core.pos.y -= one;
+			core.pos.y -= two;
 
 			extra.pos = core.pos;
 			break;
@@ -408,7 +408,7 @@ void Block::Collider()
 			core.width = one;
 			core.height = four;
 			core.pos.x += one; 
-			core.pos.y += one;
+			core.pos.y += two;
 
 			extra.pos = core.pos;
 			break;

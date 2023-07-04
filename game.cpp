@@ -81,10 +81,11 @@ namespace Tmpl8
 
 	void Game::StartPosition()
 	{
+		int startY = 0;
+
 		leftBorder = (ScreenWidth / 2) - (blocks[iterator].GetSizeOne() * 5);
 		rightBorder = (ScreenWidth / 2) + (blocks[iterator].GetSizeOne() * 5);
-		startPosition = { leftBorder + (blocks[iterator].GetSizeOne() * 4),
-				(blocks[iterator].GetCoreHeight() > blocks[iterator].GetExtraHeight() ? blocks[iterator].GetCoreHeight() : blocks[iterator].GetExtraHeight()) };
+		startPosition = { leftBorder + (blocks[iterator].GetSizeOne() * 3), startY };
 		blocks[iterator].SetPosition(startPosition);
 	}
 
@@ -373,9 +374,9 @@ namespace Tmpl8
 
 	void Game::ChangeColor()
 	{
-		//blockColor = Block::Orange;
+		blockColor = Block::Purple;
 		
-		std::mt19937 rng(std::random_device{}());
+		/*std::mt19937 rng(std::random_device{}());
 		std::uniform_int_distribution<int> dist(0, 6);
 
 		int color = dist(rng);
@@ -402,7 +403,7 @@ namespace Tmpl8
 		case 6:
 			blockColor = Block::Yellow;
 			break;
-		}
+		}*/
 	}
 
 	void Game::KeyDown(int key)
