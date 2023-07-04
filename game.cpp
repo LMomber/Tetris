@@ -373,8 +373,8 @@ namespace Tmpl8
 
 	void Game::ChangeColor()
 	{
-		blockColor = Block::Orange;
-		/*
+		//blockColor = Block::Orange;
+		
 		std::mt19937 rng(std::random_device{}());
 		std::uniform_int_distribution<int> dist(0, 6);
 
@@ -402,7 +402,7 @@ namespace Tmpl8
 		case 6:
 			blockColor = Block::Yellow;
 			break;
-		}*/
+		}
 	}
 
 	void Game::KeyDown(int key)
