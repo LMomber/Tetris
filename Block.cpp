@@ -159,7 +159,6 @@ void Block::Collider()
 			core.width = two;
 			core.height = one;
 			core.pos.x -= one;
-			core.pos.y += one;
 
 			extra.width = two;
 			extra.height = one;
@@ -218,7 +217,7 @@ void Block::Collider()
 			core.width = three; 
 			core.height = one;
 			core.pos.x -= one; 
-			core.pos.y -= one; 
+			core.pos.y -= two; 
 
 			extra.width = one; 
 			extra.height = one; 
@@ -292,7 +291,7 @@ void Block::Collider()
 			core.width = three; 
 			core.height = one; 
 			core.pos.x -= one; 
-			core.pos.y -= one; 
+			core.pos.y -= two; 
 			 
 			extra.width = one; 
 			extra.height = one; 
@@ -347,7 +346,7 @@ void Block::Collider()
 			core.width = two;
 			core.height = one;
 			core.pos.x -= one;
-			core.pos.y -= one;
+			core.pos.y -= two;
 
 			extra.width = two;
 			extra.height = one;
@@ -379,7 +378,7 @@ void Block::Collider()
 			core.width = one;
 			core.height = four;
 			core.pos.x = origin.x + two;
-			core.pos.y = static_cast<int>(origin.y * 1.66) - (one);
+			core.pos.y = static_cast<int>(origin.y * 1.66);
 
 			extra.width = 0;
 			extra.height = 0;
@@ -389,7 +388,7 @@ void Block::Collider()
 			core.width = four;
 			core.height = one;
 			core.pos.x -= one;
-			core.pos.y -= one;
+			core.pos.y -= two;
 
 			extra.pos = core.pos;
 			break;
@@ -441,6 +440,7 @@ void Block::Collider()
 			core.width = one; 
 			core.height = one; 
 			core.pos.x = core.pos.x - one;
+			core.pos.y -= one;
 
 			extra.width = three; 
 			extra.height = one; 
@@ -450,7 +450,7 @@ void Block::Collider()
 		case 2:
 			core.width = one; 
 			core.height = one; 
-			core.pos.y -= two; 
+			core.pos.y -= one; 
 
 			extra.width = one; 
 			extra.height = three; 
