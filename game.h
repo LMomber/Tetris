@@ -61,7 +61,6 @@ private:
 	SDL_Event event;
 
 	Block::Color blockColor = Block::Purple;
-	Block::Color testColor = Block::All;
 
 	std::array<std::array<bool, 20>, 10> grid = { false };
 	std::array<std::array<int, 20>, 10> gridColors = { 0 };

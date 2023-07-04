@@ -24,7 +24,7 @@ namespace Tmpl8
 			elapsedSeconds = lastSecond = 0;
 
 			ChangeColor();
-			//Block newBlock(testColor);
+
 			Block newBlock(blockColor);
 			blocks.push_back(newBlock);
 			blocks[iterator].Collider();
@@ -53,10 +53,9 @@ namespace Tmpl8
 			}
 
 			Update();
-			//if (iterator >= 1) std::cout << blocks[iterator-1].GetGridPos().x << std::endl;
-			//std::cout << leftBorder << std::endl;
+#ifdef _DEBUG
 			std::cout << xPosCore << " , " << yPosCore << std::endl;
-
+#endif
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder);
 			GridCollision();
 
@@ -84,7 +83,7 @@ namespace Tmpl8
 	{
 		leftBorder = (ScreenWidth / 2) - (blocks[iterator].GetSizeOne() * 5);
 		rightBorder = (ScreenWidth / 2) + (blocks[iterator].GetSizeOne() * 5);
-		startPosition = { leftBorder + (blocks[iterator].GetSizeOne() * 3),
+		startPosition = { leftBorder + (blocks[iterator].GetSizeOne() * 4),
 				(blocks[iterator].GetCoreHeight() > blocks[iterator].GetExtraHeight() ? blocks[iterator].GetCoreHeight() : blocks[iterator].GetExtraHeight()) };
 		blocks[iterator].SetPosition(startPosition);
 	}
@@ -140,32 +139,31 @@ namespace Tmpl8
 
 		//Core x1
 		x11 = blocks[i].GetPosition().x + blocks[i].GetCorePos().x;
-		//screen->Line(x11, 0, x11, ScreenHeight, 0x00ff00);
+
 		//Core x2
 		x22 = blocks[i].GetPosition().x + blocks[i].GetCorePos().x + blocks[i].GetCoreWidth();
-		//screen->Line(x22, 0, x22, ScreenHeight, 0x00ff00);
+
 		//Core y1
 		y11 = blocks[i].GetPosition().y + blocks[i].GetCorePos().y;
-		//screen->Line(0, y11, ScreenWidth, y11, 0x00ff00);
+
 		//Core y2
 		y22 = blocks[i].GetPosition().y + blocks[i].GetCorePos().y - blocks[i].GetCoreHeight();
-		//screen->Line(0, y22, ScreenWidth, y22, 0x00ff00);
 
 		//Core Box
 		screen->Box(x11, y11, x22, y22, 0x00ff00);
 
+
 		//Extra x1
 		x33 = blocks[i].GetPosition().x + blocks[i].GetExtraPos().x;
-		//screen->Line(x33, 0, x33, ScreenHeight, 0x00ff00);
+
 		//Extra x2
 		x44 = blocks[i].GetPosition().x + blocks[i].GetExtraPos().x + blocks[i].GetExtraWidth();
-		//screen->Line(x4, 0, x44, ScreenHeight, 0x00ff00);
+
 		//Extra y1
 		y33 = blocks[i].GetPosition().y + blocks[i].GetExtraPos().y;
-		//screen->Line(0, y33, ScreenWidth, y33, 0x00ff00);
+
 		//Extra y2
 		y44 = blocks[i].GetPosition().y + blocks[i].GetExtraPos().y - blocks[i].GetExtraHeight();
-		//screen->Line(0, y44, ScreenWidth, y44, 0x00ff00);
 
 		//Extra Box
 		screen->Box(x33, y33, x44, y44, 0xff0000);
@@ -375,6 +373,8 @@ namespace Tmpl8
 
 	void Game::ChangeColor()
 	{
+		blockColor = Block::Orange;
+		/*
 		std::mt19937 rng(std::random_device{}());
 		std::uniform_int_distribution<int> dist(0, 6);
 
@@ -402,7 +402,7 @@ namespace Tmpl8
 		case 6:
 			blockColor = Block::Yellow;
 			break;
-		}
+		}*/
 	}
 
 	void Game::KeyDown(int key)
