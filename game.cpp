@@ -230,22 +230,22 @@ namespace Tmpl8
 		yPosExtra = abs(extra_y1 - bottomBorder) / blocks[iterator].GetSizeOne();
 
 		//Check if the grid left of the xPos is true
-		if (yPosCore < 20 && xPosCore > 0 && grid[xPosCore - 1][yPosCore] == true) allowLeft = false;
-		else if (yPosExtra < 20 && xPosExtra > 0 && grid[xPosExtra - 1][yPosExtra] == true) allowLeft = false;
+		if (InBounds(xPosCore, yPosCore, 1) && grid[xPosCore - 1][yPosCore + 1] == true) allowLeft = false;
+		else if (InBounds(xPosExtra, yPosExtra, 1) && grid[xPosExtra - 1][yPosExtra + 1] == true) allowLeft = false;
 		else allowLeft = true;
 
 		//Check if the grid right of the xPos is true
-		if (yPosCore < 20 && (xPosCore < 9 && xPosCore >= 0) && grid[xPosCore + 1][yPosCore] == true) allowRight = false;
-		else if (yPosExtra < 20 && (xPosExtra < 9 && xPosExtra >= 0) && grid[xPosExtra + 1][yPosExtra] == true) allowRight = false;
+		if (InBounds(xPosCore, yPosCore, 2) && grid[xPosCore + 1][yPosCore + 1] == true) allowRight = false;
+		else if (InBounds(xPosExtra, yPosExtra, 2) && grid[xPosExtra + 1][yPosExtra + 1] == true) allowRight = false;
 		else allowRight = true;
 
 		//Check if the grid under Core is true. If so, prevent movement downwards, nextBlock == true;
-		if (InBounds(xPosCore, yPosCore) && grid[xPosCore][yPosCore] == true)
+		if (InBounds(xPosCore, yPosCore, 3) && grid[xPosCore][yPosCore] == true)
 		{
 			FixedPosition(xPosCore, yPosCore);
 		}
 		//Check if the grid under Extra is true. If so, prevent movement downwards, nextBlock == true;
-		else if (InBounds(xPosExtra, yPosExtra) && grid[xPosExtra][yPosExtra] == true)
+		else if (InBounds(xPosExtra, yPosExtra, 3) && grid[xPosExtra][yPosExtra] == true)
 		{
 			FixedPosition(xPosExtra, yPosExtra);
 		}
@@ -253,10 +253,6 @@ namespace Tmpl8
 		{
 			if (!timeStampTaken)
 			{
-				int xTemp = (blocks[iterator].GetPosition().x - leftBorder) / blocks[iterator].GetSizeOne();
-				int yTemp = abs(core_y1 - bottomBorder) / blocks[iterator].GetSizeOne();
-				blocks[iterator].SetGridPos({ xTemp, yTemp });
-
 				onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
 				timeStampTaken = true;
 			}
@@ -267,6 +263,7 @@ namespace Tmpl8
 				gameState = NextBlock;
 			}
 		}
+		else timeStampTaken = false;
 	}
 
 	void Game::AddToGrid()
@@ -347,18 +344,28 @@ namespace Tmpl8
 		}
 	}
 
-	bool Game::InBounds(int xPos, int yPos)
+	bool Game::InBounds(int xPos, int yPos, int lever)
 	{
-		if (xPos >= 0 && xPos < 10 && yPos > 0 && yPos < 19) return true;
-		else return false;
+		switch (lever) {
+		case 1:
+			if (xPos > 0 && xPos < 10 && yPos > 0 && yPos < 19) return true;
+			else return false;
+			break;
+		case 2:
+			if (xPos >= 0 && xPos < 9 && yPos > 0 && yPos < 19) return true;
+			else return false;
+			break;
+		case 3:
+			if (xPos >= 0 && xPos < 10 && yPos > 0 && yPos < 19) return true;
+			else return false;
+			break;
+		}
 	}
 
 	void Game::FixedPosition(int xPos, int yPos)
 	{
 		if (!timeStampTaken)
 		{
-			blocks[iterator].SetGridPos({ xPos, yPos });
-
 			onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
 			timeStampTaken = true;
 		}
@@ -374,9 +381,9 @@ namespace Tmpl8
 
 	void Game::ChangeColor()
 	{
-		blockColor = Block::Purple;
+		//blockColor = Block::Orange;
 		
-		/*std::mt19937 rng(std::random_device{}());
+		std::mt19937 rng(std::random_device{}());
 		std::uniform_int_distribution<int> dist(0, 6);
 
 		int color = dist(rng);
@@ -403,7 +410,7 @@ namespace Tmpl8
 		case 6:
 			blockColor = Block::Yellow;
 			break;
-		}*/
+		}
 	}
 
 	void Game::KeyDown(int key)

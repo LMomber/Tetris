@@ -39,7 +39,7 @@ public:
 	void GridCollision();
 	void AddToGrid();
 
-	bool InBounds(int xPos, int yPos);
+	bool InBounds(int xPos, int yPos, int lever);
 
 	void FixedPosition(int xPos, int yPos);
 	void ChangeColor();
