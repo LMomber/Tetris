@@ -59,12 +59,12 @@ namespace Tmpl8
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder);
 			GridCollision();
 
-			screen->Clear(0);
-			DrawPlayingField();
+			screen->Clear(0); 
+			DrawPlayingField(); 
 
 			//Draw sprites
-			DrawBlock(iterator);
-			DrawOldBlock();
+			DrawBlock(); 
+			DrawOldBlock(); 
 
 		break;
 		}
@@ -102,34 +102,70 @@ namespace Tmpl8
 		xPosExtra = (extra_x1 - leftBorder) / blocks[iterator].GetSizeOne();
 	}
 
-	void Game::DrawBlock(int i)
+	void Game::DrawBlock()
 	{
-		switch (blocks[i].GetColor()) {
+#ifdef _DEBUG
+#else
+		std::cout << blocks[iterator].GetPosition().y << std::endl;
+#endif
+
+		if (blocks[iterator].GetPosition().y % 10 != 0)
+		{
+			blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + blocks[iterator].GetSizeOne() - 1});
+		}
+
+		switch (blocks[iterator].GetColor()) {
 		case Block::Blue:
-			blue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
+			blue->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::Green:
-			green->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
+			green->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::Red:
-			red->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfRed(), blocks[i].GetSizeOfRed(), screen, blocks[i].GetFrame());
+			red->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOfRed(), blocks[iterator].GetSizeOfRed(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::Orange:
-			orange->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
+			orange->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::Yellow:
-			yellow->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
+			yellow->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::Purple:
-			purple->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOfPurple(), blocks[i].GetSizeOfPurple(), screen, blocks[i].GetFrame());
+			purple->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOfPurple(), blocks[iterator].GetSizeOfPurple(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::LightBlue:
-			lightBlue->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSize(), blocks[i].GetSize(), screen, blocks[i].GetFrame());
+			lightBlue->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
 			break;
 		case Block::All:
-			colors->DrawScaled(blocks[i].GetPosition().x, blocks[i].GetPosition().y, blocks[i].GetSizeOne(), blocks[i].GetSizeOne(), screen, blocks[i].GetFrame());
+			colors->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, blocks[iterator].GetFrame());
 			break;
 		}
+		/*switch (blocks[iterator].GetColor()) {
+		case Block::Blue:
+			blue->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::Green:
+			green->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::Red:
+			red->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOfRed(), blocks[iterator].GetSizeOfRed(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::Orange:
+			orange->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::Yellow:
+			yellow->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::Purple:
+			purple->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOfPurple(), blocks[iterator].GetSizeOfPurple(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::LightBlue:
+			lightBlue->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
+			break;
+		case Block::All:
+			colors->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, blocks[iterator].GetFrame());
+			break;
+		}*/
 
 #ifdef _DEBUG
 		/***************************************
@@ -139,32 +175,32 @@ namespace Tmpl8
 		****************************************/
 
 		//Core x1
-		x11 = blocks[i].GetPosition().x + blocks[i].GetCorePos().x;
+		x11 = blocks[iterator].GetPosition().x + blocks[iterator].GetCorePos().x;
 
 		//Core x2
-		x22 = blocks[i].GetPosition().x + blocks[i].GetCorePos().x + blocks[i].GetCoreWidth();
+		x22 = blocks[iterator].GetPosition().x + blocks[iterator].GetCorePos().x + blocks[iterator].GetCoreWidth();
 
 		//Core y1
-		y11 = blocks[i].GetPosition().y + blocks[i].GetCorePos().y;
+		y11 = blocks[iterator].GetPosition().y + blocks[iterator].GetCorePos().y;
 
 		//Core y2
-		y22 = blocks[i].GetPosition().y + blocks[i].GetCorePos().y - blocks[i].GetCoreHeight();
+		y22 = blocks[iterator].GetPosition().y + blocks[iterator].GetCorePos().y - blocks[iterator].GetCoreHeight();
 
 		//Core Box
 		screen->Box(x11, y11, x22, y22, 0x00ff00);
 
 
 		//Extra x1
-		x33 = blocks[i].GetPosition().x + blocks[i].GetExtraPos().x;
+		x33 = blocks[iterator].GetPosition().x + blocks[iterator].GetExtraPos().x;
 
 		//Extra x2
-		x44 = blocks[i].GetPosition().x + blocks[i].GetExtraPos().x + blocks[i].GetExtraWidth();
+		x44 = blocks[iterator].GetPosition().x + blocks[iterator].GetExtraPos().x + blocks[iterator].GetExtraWidth();
 
 		//Extra y1
-		y33 = blocks[i].GetPosition().y + blocks[i].GetExtraPos().y;
+		y33 = blocks[iterator].GetPosition().y + blocks[iterator].GetExtraPos().y;
 
 		//Extra y2
-		y44 = blocks[i].GetPosition().y + blocks[i].GetExtraPos().y - blocks[i].GetExtraHeight();
+		y44 = blocks[iterator].GetPosition().y + blocks[iterator].GetExtraPos().y - blocks[iterator].GetExtraHeight();
 
 		//Extra Box
 		screen->Box(x33, y33, x44, y44, 0xff0000);

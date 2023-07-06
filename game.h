@@ -32,7 +32,7 @@ public:
 	void StartPosition();
 	void Update();
 
-	void DrawBlock(int i);
+	void DrawBlock();
 	void DrawOldBlock();
 	void DrawPlayingField();
 
