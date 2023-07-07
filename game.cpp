@@ -58,6 +58,7 @@ namespace Tmpl8
 #endif
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder);
 			GridCollision();
+			CheckRows();
 
 			screen->Clear(0); 
 			DrawPlayingField(); 
@@ -140,32 +141,6 @@ namespace Tmpl8
 			colors->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, blocks[iterator].GetFrame());
 			break;
 		}
-		/*switch (blocks[iterator].GetColor()) {
-		case Block::Blue:
-			blue->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::Green:
-			green->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::Red:
-			red->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOfRed(), blocks[iterator].GetSizeOfRed(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::Orange:
-			orange->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::Yellow:
-			yellow->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::Purple:
-			purple->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOfPurple(), blocks[iterator].GetSizeOfPurple(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::LightBlue:
-			lightBlue->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSize(), blocks[iterator].GetSize(), screen, blocks[iterator].GetFrame());
-			break;
-		case Block::All:
-			colors->DrawScaled(blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y, blocks[iterator].GetSizeOne(), blocks[iterator].GetSizeOne(), screen, blocks[iterator].GetFrame());
-			break;
-		}*/
 
 #ifdef _DEBUG
 		/***************************************
@@ -266,30 +241,6 @@ namespace Tmpl8
 		yPosExtra = abs(extra_y1 - bottomBorder) / blocks[iterator].GetSizeOne();
 
 		BlockCollision(blocks[iterator].GetColor());
-
-		/*if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
-		else allowLeft = true;
-
-		if (IsRight(xPosCore, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
-		else allowRight = true;
-
-		if (IsUnder(xPosCore, yPosCore));
-		else if (IsUnder(xPosExtra, yPosExtra));
-		else if (yPosCore == 0 || yPosExtra == 0)
-		{
-			if (!timeStampTaken)
-			{
-				onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
-				timeStampTaken = true;
-			}
-
-			if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
-			{
-				timeStampTaken = false;
-				gameState = NextBlock;
-			}
-		}
-		else timeStampTaken = false;*/
 	}
 
 	bool Game::IsLeft(int xPos, int yPos)
@@ -395,6 +346,36 @@ namespace Tmpl8
 						break;
 					}
 
+				}
+			}
+		}
+	}
+
+	void Game::CheckRows()
+	{
+		for (int j = 0; j < 20; j++)
+		{
+			int tempVar = 0;
+			for (int i = 0; i < 10; i++)
+			{
+				if (grid[i][j] == true) tempVar++;
+			}
+
+			if (tempVar == 10)
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					grid[i][j] = false;
+					gridColors[i][j] = 0;
+				}
+
+				for (int k = j + 1; k < 20; k++)
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						grid[i][k - 1] = grid[i][k];
+						gridColors[i][k - 1] = gridColors[i][k];
+					}
 				}
 			}
 		}

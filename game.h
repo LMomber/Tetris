@@ -42,6 +42,8 @@ public:
 	bool IsUnder(int xPos, int yPos); 
 	void AddToGrid();
 
+	void CheckRows();
+
 	bool InBounds(int xPos, int yPos, int lever);
 
 	void FixedPosition(int xPos, int yPos);
