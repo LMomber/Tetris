@@ -37,6 +37,9 @@ public:
 	void DrawPlayingField();
 
 	void GridCollision();
+	bool IsLeft(int xPos, int yPos);
+	bool IsRight(int xPos, int yPos);
+	bool IsUnder(int xPos, int yPos); 
 	void AddToGrid();
 
 	bool InBounds(int xPos, int yPos, int lever);
@@ -46,6 +49,8 @@ public:
 	void KeyDown(int key = 0);
 
 	void ShowTestGrid();
+
+	void BlockCollision(Block::Color color);
 
 private:
 	Surface* screen;

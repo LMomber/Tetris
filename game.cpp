@@ -265,26 +265,16 @@ namespace Tmpl8
 		yPosCore = abs(core_y1 - bottomBorder) / blocks[iterator].GetSizeOne();
 		yPosExtra = abs(extra_y1 - bottomBorder) / blocks[iterator].GetSizeOne();
 
-		//Check if the grid left of the xPos is true
-		if (InBounds(xPosCore, yPosCore, 1) && grid[xPosCore - 1][yPosCore + 1] == true) allowLeft = false;
-		else if (InBounds(xPosExtra, yPosExtra, 1) && grid[xPosExtra - 1][yPosExtra + 1] == true) allowLeft = false;
+		BlockCollision(blocks[iterator].GetColor());
+
+		/*if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
 		else allowLeft = true;
 
-		//Check if the grid right of the xPos is true
-		if (InBounds(xPosCore, yPosCore, 2) && grid[xPosCore + 1][yPosCore + 1] == true) allowRight = false;
-		else if (InBounds(xPosExtra, yPosExtra, 2) && grid[xPosExtra + 1][yPosExtra + 1] == true) allowRight = false;
+		if (IsRight(xPosCore, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
 		else allowRight = true;
 
-		//Check if the grid under Core is true. If so, prevent movement downwards, nextBlock == true;
-		if (InBounds(xPosCore, yPosCore, 3) && grid[xPosCore][yPosCore] == true)
-		{
-			FixedPosition(xPosCore, yPosCore);
-		}
-		//Check if the grid under Extra is true. If so, prevent movement downwards, nextBlock == true;
-		else if (InBounds(xPosExtra, yPosExtra, 3) && grid[xPosExtra][yPosExtra] == true)
-		{
-			FixedPosition(xPosExtra, yPosExtra);
-		}
+		if (IsUnder(xPosCore, yPosCore));
+		else if (IsUnder(xPosExtra, yPosExtra));
 		else if (yPosCore == 0 || yPosExtra == 0)
 		{
 			if (!timeStampTaken)
@@ -299,7 +289,37 @@ namespace Tmpl8
 				gameState = NextBlock;
 			}
 		}
-		else timeStampTaken = false;
+		else timeStampTaken = false;*/
+	}
+
+	bool Game::IsLeft(int xPos, int yPos)
+	{
+		//Check if the grid left of the xPos is true
+		if (InBounds(xPos, yPos, 1) && grid[xPos - 1][yPos + 1] == true)
+		{
+			return true;
+		}
+		else return false;
+	}
+
+	bool Game::IsRight(int xPos, int yPos)
+	{
+		//Check if the grid right of the xPos is true
+		if (InBounds(xPos, yPos, 2) && grid[xPos + 1][yPos + 1] == true)
+		{
+			return true;
+		}
+		else return false;
+	}
+
+	bool Game::IsUnder(int xPos, int yPos)
+	{
+		if (InBounds(xPosCore, yPosCore, 3) && grid[xPosCore][yPosCore] == true)
+		{
+			FixedPosition(xPosCore, yPosCore);
+			return true;
+		}
+		else return false;
 	}
 
 	void Game::AddToGrid()
@@ -417,7 +437,7 @@ namespace Tmpl8
 
 	void Game::ChangeColor()
 	{
-		//blockColor = Block::Orange;
+		//blockColor = Block::LightBlue;
 		
 		std::mt19937 rng(std::random_device{}());
 		std::uniform_int_distribution<int> dist(0, 6);
@@ -495,6 +515,723 @@ namespace Tmpl8
 			}
 
 			std::cout << std::endl;
+		}
+	}
+
+	void Game::BlockCollision(Block::Color color)
+	{
+		switch (color) {
+		case Block::Blue:
+			switch (blocks[iterator].GetFrame()) {
+			case 0:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 1, yPosCore) || IsRight(xPosExtra + 1, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosExtra + 1, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 1:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore + 1) || IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 2:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 1, yPosCore) || IsRight(xPosExtra + 1, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosExtra + 1, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 3:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore + 1) || IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			}
+			break;
+		case Block::Green:
+			switch (blocks[iterator].GetFrame()) {
+			case 0:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 2, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosCore + 2, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 1:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosCore, yPosCore + 2)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosCore, yPosCore + 1) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 2:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 2, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 3:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra + 1) || IsLeft(xPosExtra, yPosExtra + 2)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1) || IsRight(xPosExtra, yPosExtra + 2)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			}
+			break;
+		case Block::Red:
+		{
+			if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1)) allowLeft = false;
+			else allowLeft = true;
+
+			if (IsRight(xPosCore + 1, yPosCore) || IsRight(xPosCore + 1, yPosCore + 1)) allowRight = false;
+			else allowRight = true;
+
+			if		(IsUnder(xPosCore, yPosCore));
+			else if (IsUnder(xPosCore + 1, yPosCore));
+			else if (yPosCore == 0 || yPosExtra == 0)
+			{
+				if (!timeStampTaken)
+				{
+					onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+					timeStampTaken = true;
+				}
+
+				if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+				{
+					timeStampTaken = false;
+					gameState = NextBlock;
+				}
+			}
+			else timeStampTaken = false;
+			break;
+		}
+		case Block::Orange:
+			switch (blocks[iterator].GetFrame()) {
+			case 0:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 2, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosCore + 2, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 1:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosCore, yPosCore + 2)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosCore, yPosCore + 2) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+			}
+				break;
+			case 2:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 2, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 2, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 3:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra) || IsLeft(xPosExtra, yPosExtra + 2)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1) || IsRight(xPosExtra, yPosExtra + 2)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			}
+			break;
+		case Block::Yellow:
+			switch (blocks[iterator].GetFrame()) {
+			case 0:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 1, yPosCore) || IsRight(xPosExtra + 1, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (IsUnder(xPosExtra + 1, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 1:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosExtra, yPosExtra + 1)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 2:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 1, yPosCore) || IsRight(xPosExtra + 1, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (IsUnder(xPosExtra + 1, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 3:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosExtra, yPosExtra + 1)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1)) allowRight = false;
+				else allowRight = true;
+
+				if		(IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			}
+			break;
+		case Block::Purple:
+			switch (blocks[iterator].GetFrame()) {
+			case 0:
+			{
+				if (IsLeft(xPosCore, yPosCore)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 3, yPosCore)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosCore + 2, yPosCore));
+				else if (IsUnder(xPosCore + 3, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 1:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosCore, yPosCore + 2) || IsLeft(xPosCore, yPosCore + 3)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosCore, yPosCore + 1) || IsRight(xPosCore, yPosCore + 2) || IsRight(xPosCore, yPosCore + 3)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 2:
+			{
+				if (IsLeft(xPosCore, yPosCore)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 3, yPosCore)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosCore + 2, yPosCore));
+				else if (IsUnder(xPosCore + 3, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 3:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosCore, yPosCore + 2) || IsLeft(xPosCore, yPosCore + 3)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosCore, yPosCore + 1) || IsRight(xPosCore, yPosCore + 2) || IsRight(xPosCore, yPosCore + 3)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			}
+			break;
+		case Block::LightBlue:
+			switch (blocks[iterator].GetFrame()) {
+			case 0:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore + 2, yPosCore) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosCore + 1, yPosCore));
+				else if (IsUnder(xPosCore + 2, yPosCore));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 1:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosCore, yPosCore + 1) || IsLeft(xPosCore, yPosCore + 1)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore + 1) || IsRight(xPosCore, yPosCore + 2) || IsRight(xPosExtra, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 2:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosCore, yPosCore) || IsRight(xPosExtra + 2, yPosExtra)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra + 1, yPosExtra));
+				else if (IsUnder(xPosExtra + 2, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			case 3:
+			{
+				if (IsLeft(xPosCore, yPosCore) || IsLeft(xPosExtra, yPosExtra) || IsLeft(xPosExtra, yPosExtra + 1)) allowLeft = false;
+				else allowLeft = true;
+
+				if (IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1) || IsRight(xPosExtra, yPosExtra + 2)) allowRight = false;
+				else allowRight = true;
+
+				if (IsUnder(xPosCore, yPosCore));
+				else if (IsUnder(xPosExtra, yPosExtra));
+				else if (yPosCore == 0 || yPosExtra == 0)
+				{
+					if (!timeStampTaken)
+					{
+						onGroundTimeStamp = static_cast<float>(blockTimer.totalSeconds());
+						timeStampTaken = true;
+					}
+
+					if ((static_cast<float>(blockTimer.totalSeconds()) - onGroundTimeStamp) >= waitTime)
+					{
+						timeStampTaken = false;
+						gameState = NextBlock;
+					}
+				}
+				else timeStampTaken = false;
+				break;
+			}
+			}
+			break;
 		}
 	}
 };
