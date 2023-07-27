@@ -35,6 +35,7 @@ public:
 	void DrawBlock();
 	void DrawOldBlock();
 	void DrawPlayingField();
+	void DrawScore();
 
 	void GridCollision();
 	bool IsLeft(int xPos, int yPos);
@@ -123,6 +124,8 @@ private:
 	bool nextBlock{ false };
 
 	vec startPosition;
+
+	int score = 1000;
 };
 
 }; // namespace Tmpl8

@@ -6,6 +6,9 @@
 #include <cassert>
 #include <cstring>
 #include "FreeImage.h"
+#include <cmath>
+
+#include <iostream>
 
 namespace Tmpl8 {
 
@@ -120,6 +123,61 @@ namespace Tmpl8 {
 			{
 				pos = s_Transl[(unsigned short)a_String[i]];
 			}
+			Pixel* a = t;
+			char* c = (char*)s_Font[pos];
+			//For Y-length
+			for (int v = 0; v < 5; v++, c++, a += width * m_Pitch) {
+				//For X-length
+				for (int h = 0; h < 5 * width; h += width) {
+					//If the next character in InitCharset() is "true"
+					if (*c++ == 'o') {
+						for (int w = 0; w < width; w++)
+							for (int j = 0; j < width; j++)
+								a[w + h + j * m_Pitch] = color, a[w + h + (j + 1) * m_Pitch] = 0;
+					}
+				}
+			}
+		}
+	}
+
+	void Surface::Print(int points, int x1, int y1, Pixel color, int width)
+	{
+		if (!fontInitialized)
+		{
+			InitNumSet();
+			fontInitialized = true;
+		}
+		Pixel* t = m_Buffer + x1 + y1 * m_Pitch;
+
+		int cycle = 0;
+		int temp = points;
+
+		while (temp > 0)
+		{
+			cycle++;
+			temp /= 10;
+		}
+
+		for (int i = 1; i < cycle; i++, t += 6 * width)
+		{
+			int subtract = 0;
+
+			if (i >= 1)
+			{
+				for (int n = 1; n <= i; n++)
+				{
+					subtract += std::pow(10, cycle - n);
+				}
+			}
+
+			int number = (points - subtract) / std::pow(10, cycle - i - 1);
+
+			long pos = 0;
+
+			pos = s_Transl[number]; 
+			std::cout << number << std::endl;
+			std::cout << pos << std::endl;
+
 			Pixel* a = t;
 			char* c = (char*)s_Font[pos];
 			//For Y-length
@@ -351,6 +409,24 @@ namespace Tmpl8 {
 		int i;
 		for (i = 0; i < 256; i++) s_Transl[i] = 45;
 		for (i = 0; i < 50; i++) s_Transl[(unsigned char)c[i]] = i;
+	}
+
+	void Surface::InitNumSet()
+	{
+		SetChar(0, ":ooo:", "o::oo", "o:o:o", "oo::o", ":ooo:");
+		SetChar(1, "::o::", ":oo::", "::o::", "::o::", ":ooo:");
+		SetChar(2, ":ooo:", "o:::o", "::oo:", ":o:::", "ooooo");
+		SetChar(3, "oooo:", "::::o", "::oo:", "::::o", "oooo:");
+		SetChar(4, "o::::", "o::o:", "ooooo", ":::o:", ":::o:");
+		SetChar(5, "ooooo", "o::::", "oooo:", "::::o", "oooo:");
+		SetChar(6, ":oooo", "o::::", "oooo:", "o:::o", ":ooo:");
+		SetChar(7, "ooooo", "::::o", ":::o:", "::o::", "::o::");
+		SetChar(8, ":ooo:", "o:::o", ":ooo:", "o:::o", ":ooo:");
+		SetChar(9, ":ooo:", "o:::o", ":oooo", "::::o", ":ooo:");
+		char c[] = "0123456789";
+		int i;
+		for (i = 0; i < 256; i++) s_Transl[i] = 45;
+		for (i = 0; i < 10; i++) s_Transl[(unsigned char)c[i]] = i;
 	}
 
 	void Surface::ScaleColor(unsigned int a_Scale)

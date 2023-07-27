@@ -62,6 +62,7 @@ namespace Tmpl8
 
 			screen->Clear(0); 
 			DrawPlayingField(); 
+			DrawScore();
 
 			//Draw sprites
 			DrawBlock(); 
@@ -105,11 +106,6 @@ namespace Tmpl8
 
 	void Game::DrawBlock()
 	{
-#ifdef _DEBUG
-#else
-		std::cout << blocks[iterator].GetPosition().y << std::endl;
-#endif
-
 		if (blocks[iterator].GetPosition().y % 10 != 0)
 		{
 			blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + blocks[iterator].GetSizeOne() - 1});
@@ -234,6 +230,11 @@ namespace Tmpl8
 		screen->Line(static_cast<float>(rightBorder), 0, static_cast<float>(rightBorder), static_cast<float>(bottomBorder), 0xffffff);
 	}
 
+	void Game::DrawScore()
+	{
+		//screen->Print(score, 50, 100, 0xffffff, 5);
+	}
+
 	void Game::GridCollision()
 	{
 		//Calculate the Y-position in the grid
@@ -353,22 +354,30 @@ namespace Tmpl8
 
 	void Game::CheckRows()
 	{
+		//For all Y:
 		for (int j = 0; j < 20; j++)
 		{
 			int tempVar = 0;
+
+			//For all X:
 			for (int i = 0; i < 10; i++)
 			{
+				//If the grid on the x,y is true, increase tempVar
 				if (grid[i][j] == true) tempVar++;
 			}
 
+			//If the whole row is true:
 			if (tempVar == 10)
 			{
+				score += 1000;
+				//Make the row false again
 				for (int i = 0; i < 10; i++)
 				{
 					grid[i][j] = false;
 					gridColors[i][j] = 0;
 				}
 
+				//Make all Y's above the deleted row Y - 1
 				for (int k = j + 1; k < 20; k++)
 				{
 					for (int i = 0; i < 10; i++)
@@ -397,6 +406,8 @@ namespace Tmpl8
 			else return false;
 			break;
 		}
+
+		return false;
 	}
 
 	void Game::FixedPosition(int xPos, int yPos)
