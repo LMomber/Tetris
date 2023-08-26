@@ -125,7 +125,8 @@ private:
 
 	vec startPosition;
 
-	int score = 1000;
+	int score = 0;
+	char scoreChar;
 };
 
 }; // namespace Tmpl8

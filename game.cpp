@@ -47,14 +47,14 @@ namespace Tmpl8
 					blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + static_cast<int>(blocks[iterator].GetSize() / 3) });
 					lastSecond = elapsedSeconds;
 #ifdef _DEBUG
-					ShowTestGrid();
+					//ShowTestGrid();
 #endif
 				}
 			}
 
 			Update();
 #ifdef _DEBUG
-			std::cout << xPosCore << " , " << yPosCore << std::endl;
+			//std::cout << xPosCore << " , " << yPosCore << std::endl;
 #endif
 			blocks[iterator].WallCollision(leftBorder, rightBorder, bottomBorder);
 			GridCollision();
@@ -232,7 +232,7 @@ namespace Tmpl8
 
 	void Game::DrawScore()
 	{
-		//screen->Print(score, 50, 100, 0xffffff, 5);
+		screen->Print(score, 200, 100, 0xffffff, 5);
 	}
 
 	void Game::GridCollision()

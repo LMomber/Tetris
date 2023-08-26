@@ -7,6 +7,7 @@
 #include <cstring>
 #include "FreeImage.h"
 #include <cmath>
+#include <string>
 
 #include <iostream>
 
@@ -123,6 +124,7 @@ namespace Tmpl8 {
 			{
 				pos = s_Transl[(unsigned short)a_String[i]];
 			}
+			//std::cout << (unsigned short)(a_String[i] - ('A' - 'a')) << std::endl;
 			Pixel* a = t;
 			char* c = (char*)s_Font[pos];
 			//For Y-length
@@ -140,44 +142,26 @@ namespace Tmpl8 {
 		}
 	}
 
-	void Surface::Print(int points, int x1, int y1, Pixel color, int width)
+	//Print function for multiple-digit-numbers
+	void Surface::Print(const int a_Num, int x1, int y1, Pixel color, int width)
 	{
 		if (!fontInitialized)
 		{
-			InitNumSet();
+			InitCharset();
 			fontInitialized = true;
 		}
 		Pixel* t = m_Buffer + x1 + y1 * m_Pitch;
-
-		int cycle = 0;
-		int temp = points;
-
-		while (temp > 0)
+		std::string num_String = std::to_string(a_Num);
+		int length_Of_Number = trunc(log10(a_Num)) + 1;
+		int alphabet = 26;
+		//For each character
+		for (int i = 0; i < length_Of_Number; i++, t += 6 * width)
 		{
-			cycle++;
-			temp /= 10;
-		}
-
-		for (int i = 1; i < cycle; i++, t += 6 * width)
-		{
-			int subtract = 0;
-
-			if (i >= 1)
-			{
-				for (int n = 1; n <= i; n++)
-				{
-					subtract += std::pow(10, cycle - n);
-				}
-			}
-
-			int number = (points - subtract) / std::pow(10, cycle - i - 1);
+			int current_Digit = num_String[i];
 
 			long pos = 0;
-
-			pos = s_Transl[number]; 
-			std::cout << number << std::endl;
+			pos = s_Transl[/*alphabet + */current_Digit];
 			std::cout << pos << std::endl;
-
 			Pixel* a = t;
 			char* c = (char*)s_Font[pos];
 			//For Y-length
