@@ -48,6 +48,7 @@ namespace Tmpl8
 					lastSecond = elapsedSeconds;
 #ifdef _DEBUG
 					//ShowTestGrid();
+					std::cout << yPosExtra << std::endl;
 #endif
 				}
 			}
@@ -108,8 +109,10 @@ namespace Tmpl8
 	{
 		if (blocks[iterator].GetPosition().y % 10 != 0)
 		{
-			blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + blocks[iterator].GetSizeOne() - 1});
+			blocks[iterator].SetPosition({ blocks[iterator].GetPosition().x, blocks[iterator].GetPosition().y + blocks[iterator].GetSizeOne()});
 		}
+
+		std::cout << blocks[iterator].GetSizeOne() << std::endl;
 
 		switch (blocks[iterator].GetColor()) {
 		case Block::Blue:
@@ -266,9 +269,9 @@ namespace Tmpl8
 
 	bool Game::IsUnder(int xPos, int yPos)
 	{
-		if (InBounds(xPosCore, yPosCore, 3) && grid[xPosCore][yPosCore] == true)
+		if (InBounds(xPos, yPos, 3) && grid[xPos][yPos] == true) 
 		{
-			FixedPosition(xPosCore, yPosCore);
+			FixedPosition(xPos, yPos); 
 			return true;
 		}
 		else return false;
@@ -525,7 +528,7 @@ namespace Tmpl8
 
 				if		(IsUnder(xPosCore, yPosCore));
 				else if (IsUnder(xPosCore + 1, yPosCore));
-				else if (IsUnder(xPosExtra + 1, yPosExtra));
+				else if (IsUnder(xPosExtra + 1, yPosExtra)) ;
 				else if (yPosCore == 0 || yPosExtra == 0)
 				{
 					if (!timeStampTaken)
@@ -578,7 +581,7 @@ namespace Tmpl8
 				if (IsRight(xPosCore + 1, yPosCore) || IsRight(xPosExtra + 1, yPosExtra)) allowRight = false;
 				else allowRight = true;
 
-				if		(IsUnder(xPosCore, yPosCore));
+				if (IsUnder(xPosCore, yPosCore));
 				else if (IsUnder(xPosCore + 1, yPosCore));
 				else if (IsUnder(xPosExtra + 1, yPosExtra));
 				else if (yPosCore == 0 || yPosExtra == 0)
@@ -606,7 +609,7 @@ namespace Tmpl8
 				if (IsRight(xPosCore, yPosCore + 1) || IsRight(xPosExtra, yPosExtra) || IsRight(xPosExtra, yPosExtra + 1)) allowRight = false;
 				else allowRight = true;
 
-				if		(IsUnder(xPosCore, yPosCore));
+				if (IsUnder(xPosCore, yPosCore));
 				else if (IsUnder(xPosExtra, yPosExtra));
 				else if (yPosCore == 0 || yPosExtra == 0)
 				{
